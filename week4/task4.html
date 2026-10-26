@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html><body style="font-family:system-ui;padding:20px;max-width:420px;margin:auto">
+  <style>
+    h2 { color: #1a56db; }
+    #search { width:100%; padding:10px 14px; font-size:16px;
+      border:2px solid #1a56db; border-radius:10px; margin-bottom:14px; }
+    .student { padding:10px 14px; margin-bottom:6px; background:#f0f4ff;
+      border-radius:8px; border:1px solid #c8d4f0; font-size:15px; }
+    mark { background: #f7df1e; border-radius: 3px; }
+    #no-results { display:none; color:#9ca3af; text-align:center; padding:20px; }
+  </style>
+
+  <h2>Student Search</h2>
+  <input id="search" type="text" placeholder="Search students...">
+  <div id="student-list">
+    <div class="student" data-name="Enkhtsog Anand">Enkhtsog Anand — Web Programming</div>
+    <div class="student" data-name="Otgonjargal Murun">Otgonjargal Murun — Computer Science</div>
+    <div class="student" data-name="Erdenesambuu">Erdenesambuu — Software Engineering</div>
+    <div class="student" data-name="Delgerbat">Delgerbat — Artificial Intelligence</div>
+    <div class="student" data-name="Chingun">Chingun — Data Science</div>
+    <div class="student" data-name="Suvdansondor">Suvdansondor — Web Programming</div>
+  </div>
+  <p id="no-results">No students found.</p>
+
+  <script>
+    const searchInput = document.getElementById('search');
+    const studentElements = document.querySelectorAll('.student');
+    const noResults = document.getElementById('no-results');
+
+    searchInput.addEventListener('input', (e) => {
+      const searchTerm = e.target.value.toLowerCase();
+      let anyVisible = false;
+
+      studentElements.forEach(student => {
+        const name = student.getAttribute('data-name').toLowerCase();
+        if (name.includes(searchTerm)) {
+          student.style.display = '';
+          anyVisible = true;
+
+          const regex = new RegExp(`(${searchTerm})`, 'gi');
+          student.innerHTML = student.getAttribute('data-name').replace(regex, '<mark>$1</mark>') + ' — ' + student.textContent.split(' — ')[1];
+        } else {
+          student.style.display = 'none';
+        }
+      });
+
+      noResults.style.display = anyVisible ? 'none' : '';
+    });
+  </script>
+</body></html>
