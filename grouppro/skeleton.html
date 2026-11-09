@@ -1,305 +1,2271 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>LIFEOS — Your life, under control</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Fraunces:wght@400;600&display=swap" rel="stylesheet">
-<style>
-:root{--bg:#F6F1E7;--card:#FCFAF4;--ink:#2B2D2A;--mute:#6A6E64;--line:#E3DCCB;--sage-d:#4B6847;--sage-l:#E4EBDC;--warn:#9C4A33;--warn-l:#F3E0D6;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
-@media (
-    prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#1E211D;--card:#272B26;--ink:#ECE7DA;--mute:#A5A99D;--line:#363B34;--sage-d:#A9C7A3;--sage-l:#2F3A2D;--warn:#E3A08A;--warn-l:#46302A}}
-:root[data-theme="dark"]{--bg:#1E211D;--card:#272B26;--ink:#ECE7DA;--mute:#A5A99D;--line:#363B34;--sage-d:#A9C7A3;--sage-l:#2F3A2D;--warn:#E3A08A;--warn-l:#46302A}
-*,*::before,*::after{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--ink);font:400 17px/1.5 'DM Sans',system-ui,sans-serif}
-body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--bg);z-index:20}
-h1,h2,h3,.brand{font-family:'Fraunces',Georgia,serif;font-weight:400;margin:0}
-h1{font-size:clamp(38px,6vw,62px);line-height:1.05;margin-bottom:10px}
-h2{font-size:28px;margin:34px 0 14px}
-h3{font-size:20px;margin:24px 0 10px}
-.app{display:grid;grid-template-columns:250px 1fr;min-height:100vh}
-.sb{position:sticky;top:env(safe-area-inset-top,0px);height:calc(100vh - env(safe-area-inset-top,0px));padding:30px 20px;border-right:1px solid var(--line);display:flex;flex-direction:column;gap:6px}
-.bw{margin-bottom:26px}
-.brand{font-size:28px;font-weight:600;letter-spacing:.02em}
-.tagl{font-size:11px;letter-spacing:.14em;color:var(--mute)}
-.nv{border:0;background:none;color:var(--ink);font:500 16px 'DM Sans',sans-serif;padding:11px 14px;border-radius:12px;text-align:left;cursor:pointer}
-.nv.on{background:var(--sage-l);color:var(--sage-d);font-weight:700}
-.add{margin-top:14px}
-.note{margin-top:auto;font-size:13px;color:var(--mute)}
-main{padding:44px clamp(20px,4vw,56px) 90px;max-width:960px;width:100%}
-.eyebrow{font-size:12px;letter-spacing:.14em;color:var(--sage-d);font-weight:700;margin-bottom:10px}
-.mute{color:var(--mute)}.sm{font-size:14px}
-.lead{font-size:20px;margin:0}
-.stats{display:flex;gap:16px;flex-wrap:wrap;margin:28px 0 8px}
-.stat{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:18px 24px;min-width:170px;color:var(--mute);font-size:14px}
-.stat b{display:block;font:400 46px/1.1 'Fraunces',serif;color:var(--ink)}
-.item{display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px 18px;margin-bottom:12px}
-.item.click{cursor:pointer}.item.click:hover{border-color:var(--sage-d)}
-.acts{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
-.tag{display:inline-block;background:var(--sage-l);color:var(--sage-d);border-radius:999px;padding:3px 12px;font-size:13px;font-weight:700}
-.tag.warn{background:var(--warn-l);color:var(--warn)}
-.b{border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:999px;padding:8px 16px;font:500 14px 'DM Sans',sans-serif;cursor:pointer}
-.b:hover{border-color:var(--sage-d)}
-.b.p{background:var(--sage-d);border-color:var(--sage-d);color:var(--bg)}
-.in,.md input,.md select{width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--ink);font:400 16px 'DM Sans',sans-serif}
-.chips{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0 20px}
-.chip{border:1px solid var(--line);background:none;color:var(--ink);border-radius:999px;padding:6px 14px;font:500 14px 'DM Sans',sans-serif;cursor:pointer}
-.chip.on{background:var(--sage-d);color:var(--bg);border-color:var(--sage-d)}
-.ov{position:fixed;inset:0;background:rgba(20,22,19,.55);display:none;align-items:center;justify-content:center;padding:16px;z-index:30}
-.ov.on{display:flex}
-.md{background:var(--card);border-radius:22px;max-width:560px;width:100%;max-height:88vh;overflow:auto;padding:26px}
-.mh{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:14px}
-.mh h2{margin:0}
-.md label{display:block;font-size:14px;color:var(--mute);margin:12px 0 0}
-.md label.ck{display:flex;gap:8px;align-items:center;color:var(--ink);font-size:16px}
-.md label.ck input{width:auto}
-fieldset{border:1px solid var(--line);border-radius:12px;margin:18px 0 0;padding:6px 14px 12px}
-legend{
-    font-size:13px;
-    color:var(--mute);
-    padding:0 6px
-}
-dl{
-    display:grid;
-    grid-template-columns:140px 1fr;
-    gap:8px 14px;
-    margin:0}
-dt{
-    color:var(--mute);
-    font-size:14px}
-    dd{margin:0}
-.toast{
-    position:fixed;
-    left:50%;
-    bottom:96px;
-    transform:translateX(-50%);
-    background:var(--ink);
-    color:var(--bg);
-    border-radius:14px;
-    padding:12px 16px;
-    display:none;
-    align-items:center;
-    gap:14px;z-index:40;
-    max-width:92vw;
-    font-size:15px
-}
+<!doctype html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <title>LIFEOS — Your life, under control</title>
+    <script>
+      try {
+        var t = localStorage.getItem("lifeos-theme");
+        if (t === "light" || t === "dark")
+          document.documentElement.setAttribute("data-theme", t);
+      } catch (e) {}
+    </script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Figtree:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        color-scheme: dark;
+        --bg: #0d1020;
+        --side: #10142a;
+        --card: #171c34;
+        --raise: #1f2646;
+        --ink: #eef0fb;
+        --mute: #8d94b7;
+        --line: #272e52;
+        --acc: #8b9bff;
+        --acc-ink: #0b0e1e;
+        --acc-l: rgba(139, 155, 255, 0.15);
+        --amb: #ffc463;
+        --amb-l: rgba(255, 196, 99, 0.14);
+        --warn: #ff8a73;
+        --warn-l: rgba(255, 138, 115, 0.15);
+        --shadow: 0 24px 60px rgba(0, 0, 0, 0.5);
+        --scrim: rgba(6, 8, 18, 0.72);
+        box-sizing: border-box;
+        padding-top: env(safe-area-inset-top, 0px);
+        padding-bottom: env(safe-area-inset-bottom, 0px);
+      }
+      :root[data-theme="light"] {
+        color-scheme: light;
+        --bg: #f3f4fb;
+        --side: #ffffff;
+        --card: #ffffff;
+        --raise: #eceefa;
+        --ink: #161a33;
+        --mute: #626990;
+        --line: #dde0f1;
+        --acc: #4152db;
+        --acc-ink: #ffffff;
+        --acc-l: rgba(65, 82, 219, 0.1);
+        --amb: #8f5a00;
+        --amb-l: rgba(255, 184, 64, 0.22);
+        --warn: #be3620;
+        --warn-l: rgba(190, 54, 32, 0.1);
+        --shadow: 0 24px 60px rgba(30, 40, 100, 0.18);
+        --scrim: rgba(20, 24, 50, 0.45);
+      }
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+      }
+      html {
+        scroll-padding-top: env(safe-area-inset-top, 0px);
+      }
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--ink);
+        font:
+          400 16px/1.5 "Figtree",
+          system-ui,
+          sans-serif;
+        -webkit-font-smoothing: antialiased;
+      }
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0 0 auto;
+        height: env(safe-area-inset-top, 0px);
+        background: var(--bg);
+        z-index: 20;
+      }
+      h1,
+      h2,
+      h3,
+      .brand,
+      .cd b,
+      .stat b {
+        font-family: "Bricolage Grotesque", "Figtree", system-ui, sans-serif;
+        margin: 0;
+      }
+      h1 {
+        font-size: clamp(32px, 5vw, 50px);
+        line-height: 1.08;
+        font-weight: 700;
+        letter-spacing: -0.025em;
+        margin-bottom: 10px;
+      }
+      h2 {
+        font-size: 22px;
+        font-weight: 700;
+        letter-spacing: -0.01em;
+        margin: 38px 0 14px;
+      }
+      h3 {
+        font-size: 17px;
+        font-weight: 700;
+        margin: 24px 0 10px;
+      }
+      button {
+        font-family: inherit;
+      }
+      :focus-visible {
+        outline: 2px solid var(--acc);
+        outline-offset: 2px;
+      }
 
-.toast.on{
-    display:flex
-}
-    .toast .b{
-        background:var(--bg);
-        color:var(--ink)
-    }
-    .done b{
-        text-decoration:line-through;
-        color:var(--mute)
-    }
-    @media (min-width:861px){.toast{bottom:28px}}
-    @media (max-width:860px){
-    .app{
-    display:block
-    }
-.sb{
-    position:fixed;
-    left:0;
-    right:0;
-    bottom:0;
-    top:auto;
-    height:auto;
-    flex-direction:row;
-    gap:4px;
-    padding:8px 10px calc(8px + env(safe-area-inset-bottom,0px));
-    background:var(--bg);
-    border-top:1px solid var(--line);
-    border-right:0;
-    z-index:10
-}
-.bw,.note{
-    display:none}
-.nv,.add{
-    flex:1;
-    text-align:center;
-    margin:0;padding:10px 4px}
-main{
-    padding-bottom:120px
-}
-dl{
-    grid-template-columns:1fr
-    }
-}
-@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
-</style>
-</head>
-<body>
-<div class="app">
-<aside class="sb">
-<div class="bw"><div class="brand">LIFEOS</div><div class="tagl">YOUR PERSONAL COMMAND CENTER</div></div>
-<button class="nv" data-a="nav" data-id="overview">Overview</button>
-<button class="nv" data-a="nav" data-id="life">My Life</button>
-<button class="nv" data-a="nav" data-id="plan">Plan</button>
-<button class="b p add" data-a="add">+ Add</button>
-<p class="note">Sample data · saved in this browser</p>
-</aside>
-<main id="main"></main>
-</div>
-<div class="ov" id="ov"><div class="md" id="md"></div></div>
-<div class="toast" id="toast"></div>
-<script>
-(function(){
-var K='lifeos-v1',S,V='overview',Q='',TF='all',FT='purchase',ED=null,TA=null,TM;
-function $(s){return document.querySelector(s)}
-var TYPES={purchase:'Purchase',belonging:'Belonging',food:'Food',subscription:'Subscription',document:'Document',errand:'Errand'};
-var CUR=['KRW','USD','EUR','JPY'];
-var F={
-purchase:[['title','Item name','text'],['merchant','Merchant','text'],['price','Price','number'],['currency','Currency','select',CUR],['date','Purchase date','date'],['returnBy','Return deadline','date'],['warrantyEnd','Warranty ends','date'],['receipt','Receipt file name (creates a linked document)','text']],
-belonging:[['title','Name','text'],['category','Category','text'],['location','Stored in','text'],['serial','Serial number','text']],
-food:[['title','Food','text'],['qty','Quantity','text'],['location','Location','text'],['expires','Expiration date','date'],['opened','Opened on','date']],
-subscription:[['title','Service','text'],['cost','Price','number'],['currency','Currency','select',CUR],['cycle','Billing','select',['monthly','yearly']],['renewal','Next renewal','date'],['remind','Remind me (days before)','number']],
-document:[['title','Document name','text'],['docType','Type','select',['receipt','warranty','manual','other']],['note','Note','text']],
-errand:[['title','Errand','text'],['location','Where','text'],['due','Due date','date']]
-};
-var HINT={food:'An expiration reminder is created automatically.',subscription:'A renewal reminder is created automatically.'};
-var KR={purchase:{'return':'returnBy',warranty:'warrantyEnd'},food:{expiry:'expires'},subscription:{renewal:'renewal'}};
-var KL={'return':'Return deadline',warranty:'Warranty ends',expiry:'Expires',renewal:'Renews'};
-var LEAD={'return':7,warranty:30,expiry:3};
-var EXP={KRW:0,JPY:0};
-function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
-function uid(){return 'x'+Math.random().toString(36).slice(2,9)}
-function iso(d){var m=d.getMonth()+1,x=d.getDate();return d.getFullYear()+'-'+(m<10?'0':'')+m+'-'+(x<10?'0':'')+x}
-function add(n){var d=new Date();d.setHours(0,0,0,0);d.setDate(d.getDate()+n);return iso(d)}
-var T=add(0);
-function diff(s){return Math.round((new Date(s+'T00:00:00')-new Date(T+'T00:00:00'))/864e5)}
-function rel(s){var n=diff(s);return n===0?'today':n===1?'tomorrow':n===-1?'yesterday':n>0?'in '+n+' days':(-n)+' days ago'}
-function fd(s){return s?new Date(s+'T00:00:00').toLocaleDateString(undefined,{month:'short',day:'numeric',year:'numeric'}):''}
-function addCycle(s,c){var d=new Date(s+'T00:00:00');if(c==='yearly')d.setFullYear(d.getFullYear()+1);else d.setMonth(d.getMonth()+1);return iso(d)}
-function ex(c){return EXP[c]!==undefined?EXP[c]:2}
-function minor(v,c){return Math.round(parseFloat(v||0)*Math.pow(10,ex(c)))}
-function dec(m,c){return m==null?'':m/Math.pow(10,ex(c))}
-function money(m,c){try{return new Intl.NumberFormat(undefined,{style:'currency',currency:c}).format(m/Math.pow(10,ex(c)))}catch(e){return dec(m,c)+' '+c}}
-function pad(n){return n<10?'0'+n:''+n}
-function load(){try{var s=localStorage.getItem(K);if(s)return JSON.parse(s)}catch(e){}return null}
-function save(){try{localStorage.setItem(K,JSON.stringify(S))}catch(e){}}
-function rec(id){return S.r.filter(function(r){return r.id===id})[0]}
-function mk(type,f){var r={id:uid(),type:type,title:f.title,f:f,arch:0,done:0};S.r.push(r);return r}
-function lk(a,b,rl){S.l.push({a:a.id,b:b.id,rel:rl})}
-function syncRem(r,only){var k=KR[r.type];if(!k)return;for(var n in k){if(only&&only.indexOf(n)<0)continue;var dt=r.f[k[n]];if(!dt)continue;var x=null;S.m.forEach(function(m){if(m.rec===r.id&&m.kind===n&&!m.done)x=m});if(x)x.date=dt;else S.m.push({id:uid(),rec:r.id,kind:n,date:dt,done:0,snooze:''})}}
-function seed(){S={r:[],l:[],m:[]};
-var p=mk('purchase',{title:'Wireless headphones',merchant:'Electronics store',priceM:129000,currency:'KRW',date:add(-12),returnBy:add(2),warrantyEnd:add(353),receipt:'headphones-receipt.pdf'});
-var b=mk('belonging',{title:'Wireless headphones',category:'Electronics',location:'Desk drawer',serial:''});
-var d=mk('document',{title:'headphones-receipt.pdf',docType:'receipt',note:''});
-lk(b,p,'bought in');lk(d,p,'receipt for');syncRem(p);
-syncRem(mk('subscription',{title:'Music streaming',costM:10900,currency:'KRW',cycle:'monthly',renewal:add(3),remind:3}));
-syncRem(mk('subscription',{title:'Cloud storage',costM:299,currency:'USD',cycle:'monthly',renewal:add(21),remind:3}));
-syncRem(mk('food',{title:'Milk (opened)',qty:'1',location:'Fridge',expires:add(1),opened:add(-3)}));
-syncRem(mk('food',{title:'Eggs',qty:'10',location:'Fridge',expires:add(6),opened:''}));
-mk('errand',{title:'Pick up dry cleaning',location:'Laundry',due:add(5)});
-save()}
-function lead(m,r){return m.kind==='renewal'?(+r.f.remind||3):LEAD[m.kind]}
-function items(){var o=[];
-S.m.forEach(function(m){var r=rec(m.rec);if(!r||r.arch||m.done||(m.snooze&&m.snooze>T))return;var n=diff(m.date);if(n<=lead(m,r))o.push({k:'m',m:m,r:r,n:n,t:m.date})});
-S.r.forEach(function(r){if(r.type==='errand'&&!r.arch&&!r.done&&!(r.f.snooze&&r.f.snooze>T)&&r.f.due&&diff(r.f.due)<=3)o.push({k:'e',r:r,n:diff(r.f.due),t:r.f.due})});
-return o.sort(function(a,b){return a.n-b.n})}
-function hasErr(r){return S.l.some(function(l){var e=rec(l.a);return l.b===r.id&&e&&e.type==='errand'})}
-function meta(r){var f=r.f;
-if(r.type==='purchase')return f.returnBy?'Return by '+fd(f.returnBy):'Purchased '+fd(f.date);
-if(r.type==='belonging')return f.location||f.category||'';
-if(r.type==='food')return f.expires?'Expires '+rel(f.expires):'';
-if(r.type==='subscription')return money(f.costM,f.currency)+' · renews '+fd(f.renewal);
-if(r.type==='document')return f.docType;
-return f.due?'Due '+fd(f.due):''}
-function row(x){var r=x.r,m=x.m,id=x.k==='m'?m.id:r.id,lab=x.k==='m'?KL[m.kind]:'Due';
-var mkE=(x.k==='m'&&(m.kind==='return'||m.kind==='warranty')&&!hasErr(r))?'<button class="b" data-a="err" data-id="'+m.id+'">Make errand</button>':'';
-return '<div class="item"><div><b>'+esc(r.title)+'</b><div class="mute sm">'+TYPES[r.type]+' · '+lab+' '+rel(x.t)+'</div></div><div class="acts">'+(x.n<=1?'<span class="tag warn">'+(x.n<0?'Overdue':'Soon')+'</span>':'')+mkE+'<button class="b" data-a="snz" data-k="'+x.k+'" data-id="'+id+'">Snooze</button><button class="b p" data-a="dn" data-k="'+x.k+'" data-id="'+id+'">'+(x.k==='m'&&m.kind==='renewal'?'Renewed':'Done')+'</button><button class="b" data-a="open" data-id="'+r.id+'">Open</button></div></div>'}
-function ov(){var it=items(),W=['No','One','Two','Three','Four','Five','Six','Seven','Eight','Nine','Ten'],c=it.length,rn=it.filter(function(x){return x.k==='m'&&x.m.kind==='renewal'}).length;
-return '<div class="eyebrow">'+new Date().toLocaleDateString(undefined,{weekday:'long'}).toUpperCase()+' · YOUR OVERVIEW</div><h1>Make room for life.</h1><p class="lead mute">'+(c?(c<11?W[c]:c)+(c===1?' thing deserves':' things deserve')+' your attention today.':'Nothing needs your attention today.')+'</p><div class="stats"><div class="stat"><b>'+pad(c)+'</b>Upcoming reminders</div><div class="stat"><b>'+pad(rn)+'</b>Renewals to review</div></div><h2>Your next actions</h2>'+(c?it.map(row).join(''):'<p class="mute">You’re all caught up.</p>')}
-function lst(){var q=Q.toLowerCase(),L=S.r.filter(function(r){if(TF==='archived')return r.arch;if(r.arch)return false;if(TF!=='all'&&r.type!==TF)return false;return !q||(r.title+' '+Object.keys(r.f).map(function(k){return r.f[k]}).join(' ')).toLowerCase().indexOf(q)>=0});
-return L.length?L.map(function(r){var n=S.l.filter(function(l){return l.a===r.id||l.b===r.id}).length,mt=meta(r);return '<div class="item click" data-a="open" data-id="'+r.id+'"><div><b>'+esc(r.title)+'</b><div class="mute sm">'+TYPES[r.type]+(mt?' · '+esc(mt):'')+'</div></div>'+(n?'<span class="tag">'+n+' linked</span>':'')+'</div>'}).join(''):'<p class="mute">No records here.</p>'}
-function life(){var ch=['all'].concat(Object.keys(TYPES),['archived']).map(function(t){return '<button class="chip'+(TF===t?' on':'')+'" data-a="tf" data-id="'+t+'">'+(t==='all'?'All':t==='archived'?'Archived':TYPES[t])+'</button>'}).join('');
-return '<div class="eyebrow">MY LIFE</div><h1>Everything you keep track of.</h1><input class="in" id="q" placeholder="Search your records" value="'+esc(Q)+'"><div class="chips">'+ch+'</div><div id="list">'+lst()+'</div>'}
-function plan(){
-var ms=S.m.filter(function(m){var r=rec(m.rec),n=diff(m.date);return r&&!r.arch&&!m.done&&n<=60&&n>=-30}).sort(function(a,b){return a.date<b.date?-1:1});
-var tl=ms.length?ms.map(function(m){var r=rec(m.rec),n=diff(m.date);return '<div class="item click" data-a="open" data-id="'+r.id+'"><div><b>'+esc(r.title)+'</b><div class="mute sm">'+KL[m.kind]+' · '+fd(m.date)+'</div></div><span class="tag'+(n<=1?' warn':'')+'">'+rel(m.date)+'</span></div>'}).join(''):'<p class="mute">Nothing coming up in the next 60 days.</p>';
-var er=S.r.filter(function(r){return r.type==='errand'&&!r.arch}).map(function(r){return '<div class="item'+(r.done?' done':'')+'"><div><b>'+esc(r.title)+'</b><div class="mute sm">'+esc(r.f.location||'Anywhere')+(r.f.due?' · due '+fd(r.f.due):'')+'</div></div><button class="b" data-a="dn" data-k="e" data-id="'+r.id+'">'+(r.done?'Reopen':'Done')+'</button></div>'}).join('')||'<p class="mute">No errands yet.</p>';
-var subs=S.r.filter(function(r){return r.type==='subscription'&&!r.arch}),tot={};
-var sb=subs.map(function(r){var y=r.f.cycle==='yearly'?r.f.costM:r.f.costM*12;tot[r.f.currency]=(tot[r.f.currency]||0)+y;return '<div class="item click" data-a="open" data-id="'+r.id+'"><div><b>'+esc(r.title)+'</b><div class="mute sm">Renews '+fd(r.f.renewal)+' · '+money(r.f.costM,r.f.currency)+' '+r.f.cycle+'</div></div><span class="tag">'+money(y,r.f.currency)+' / year</span></div>'}).join('')||'<p class="mute">No subscriptions yet.</p>';
-var sum=Object.keys(tot).map(function(c){return money(tot[c],c)}).join(' + ');
-return '<div class="eyebrow">PLAN</div><h1>What’s coming up.</h1><h2>Next 60 days</h2>'+tl+'<h2>Errands</h2>'+er+'<h2>Subscriptions</h2>'+sb+(sum?'<p>Estimated yearly cost: <b>'+sum+'</b></p>':'')}
-function render(){$('#main').innerHTML=V==='overview'?ov():V==='life'?life():plan();document.querySelectorAll('.nv').forEach(function(n){n.classList.toggle('on',n.dataset.id===V)})}
-function show(h){$('#md').innerHTML=h;$('#ov').classList.add('on')}
-function close(){$('#ov').classList.remove('on')}
-function toast(msg,lab,fn){var t=$('#toast');t.innerHTML='<span>'+esc(msg)+'</span>'+(lab?'<button class="b" id="ta">'+esc(lab)+'</button>':'');t.classList.add('on');TA=fn||null;clearTimeout(TM);TM=setTimeout(function(){t.classList.remove('on')},7000)}
-function val(r,d){var k=d[0],f=r.f;if(k==='price')return f.priceM!=null?money(f.priceM,f.currency):'';if(k==='cost')return money(f.costM,f.currency);var v=f[k];if(!v)return '';if(d[2]==='date')return fd(v);if(k==='remind')return v+' days before';return String(v)}
-function openRec(id){var r=rec(id);if(!r)return;
-var h='<div class="mh"><div><div class="eyebrow">'+TYPES[r.type].toUpperCase()+'</div><h2>'+esc(r.title)+'</h2></div><button class="b" data-a="x">Close</button></div><dl>';
-F[r.type].forEach(function(d){if(d[0]==='title'||d[0]==='currency')return;var v=val(r,d);if(v)h+='<dt>'+d[1]+'</dt><dd>'+esc(v)+'</dd>'});
-if(r.type==='subscription')h+='<dt>Estimated yearly cost</dt><dd>'+money(r.f.cycle==='yearly'?r.f.costM:r.f.costM*12,r.f.currency)+'</dd>';
-h+='</dl>';
-var rm=S.m.filter(function(m){return m.rec===id&&!m.done});
-if(rm.length)h+='<h3>Reminders</h3>'+rm.map(function(m){return '<div class="mute">'+KL[m.kind]+' · '+fd(m.date)+' ('+rel(m.date)+')</div>'}).join('');
-var ls=S.l.filter(function(l){return l.a===id||l.b===id}).map(function(l){return rec(l.a===id?l.b:l.a)}).filter(Boolean);
-if(ls.length)h+='<h3>Linked records</h3>'+ls.map(function(o){return '<div class="item click" data-a="open" data-id="'+o.id+'"><div><b>'+esc(o.title)+'</b><div class="mute sm">'+TYPES[o.type]+'</div></div></div>'}).join('');
-h+='<div class="acts" style="margin-top:20px"><button class="b p" data-a="edit" data-id="'+id+'">Edit</button><button class="b" data-a="arch" data-id="'+id+'">'+(r.arch?'Restore':'Archive')+'</button></div>';
-show(h)}
-function openForm(t,r){FT=t;ED=r||null;
-var h='<div class="mh"><h2>'+(r?'Edit ':'Add ')+TYPES[t].toLowerCase()+'</h2><button class="b" data-a="x">Close</button></div>';
-if(!r)h+='<div class="chips" style="margin-top:0">'+Object.keys(TYPES).map(function(k){return '<button class="chip'+(k===t?' on':'')+'" type="button" data-a="ft" data-id="'+k+'">'+TYPES[k]+'</button>'}).join('')+'</div>';
-h+='<form id="fm">';
-F[t].forEach(function(d){var k=d[0],v;
-if(r)v=k==='price'?dec(r.f.priceM,r.f.currency):k==='cost'?dec(r.f.costM,r.f.currency):(r.f[k]||'');
-else v=(k==='date'&&t==='purchase')?T:k==='currency'?'KRW':k==='remind'?3:'';
-h+='<label>'+d[1]+(d[2]==='select'?'<select name="'+k+'">'+d[3].map(function(o){return '<option'+(o==v?' selected':'')+'>'+o+'</option>'}).join('')+'</select>':'<input name="'+k+'" type="'+d[2]+'" value="'+esc(v)+'"'+(k==='title'?' required':'')+(d[2]==='number'?' step="any" min="0"':'')+'>')+'</label>'});
-if(!r&&(t==='document'||t==='errand'))h+='<label>Link to<select name="_link"><option value="">None</option>'+S.r.filter(function(o){return !o.arch}).map(function(o){return '<option value="'+o.id+'">'+TYPES[o.type]+': '+esc(o.title)+'</option>'}).join('')+'</select></label>';
-if(!r&&t==='purchase')h+='<fieldset><legend>When saved, also…</legend><label class="ck"><input type="checkbox" name="_stuff" checked> Track it in My Stuff</label><label class="ck"><input type="checkbox" name="_ret" checked> Return reminder</label><label class="ck"><input type="checkbox" name="_war" checked> Warranty reminder</label><label class="ck"><input type="checkbox" name="_err"> Create a return errand</label></fieldset>';
-if(HINT[t])h+='<p class="mute sm">'+HINT[t]+'</p>';
-h+='<div class="acts" style="margin-top:18px"><button class="b p" type="submit">Save</button></div></form>';
-show(h)}
-document.addEventListener('submit',function(e){e.preventDefault();
-var D=new FormData(e.target),v={},f={};
-F[FT].forEach(function(d){v[d[0]]=String(D.get(d[0])||'').trim()});
-if(!v.title)return;
-F[FT].forEach(function(d){var k=d[0];if(k==='price')f.priceM=minor(v.price,v.currency);else if(k==='cost')f.costM=minor(v.cost,v.currency);else if(k==='remind')f.remind=parseInt(v.remind,10)||3;else f[k]=v[k]});
-var r;
-if(ED){var old=ED.f,kk=KR[ED.type]||{};if(old.snooze)f.snooze=old.snooze;ED.title=f.title;ED.f=f;
-syncRem(ED,Object.keys(kk).filter(function(n){return S.m.some(function(m){return m.rec===ED.id&&m.kind===n})||(!old[kk[n]]&&f[kk[n]])}));
-toast('Changes saved.')}
-else{r=mk(FT,f);
-if(FT==='purchase'){var only=[];if(D.get('_ret'))only.push('return');if(D.get('_war'))only.push('warranty');syncRem(r,only);
-if(f.receipt){lk(mk('document',{title:f.receipt,docType:'receipt',note:''}),r,'receipt for')}
-if(D.get('_stuff')){lk(mk('belonging',{title:f.title,category:'',location:'',serial:''}),r,'bought in')}
-if(D.get('_err')&&f.returnBy){lk(mk('errand',{title:'Return '+f.title,location:'',due:f.returnBy}),r,'created for')}
-toast('Purchase saved with its linked records.')}
-else{syncRem(r);var lid=D.get('_link');if(lid&&rec(lid))lk(r,rec(lid),'linked to');toast(TYPES[FT]+' saved.')}}
-save();close();render()});
-document.addEventListener('click',function(e){
-if(e.target.id==='ov'){close();return}
-if(e.target.id==='ta'){if(TA)TA();$('#toast').classList.remove('on');return}
-var t=e.target.closest('[data-a]');if(!t)return;
-var a=t.dataset.a,id=t.dataset.id,k=t.dataset.k,r,m;
-if(a==='nav'){V=id;render();window.scrollTo(0,0)}
-else if(a==='add')openForm('purchase');
-else if(a==='ft')openForm(id);
-else if(a==='tf'){TF=id;render()}
-else if(a==='open')openRec(id);
-else if(a==='x')close();
-else if(a==='edit'){r=rec(id);openForm(r.type,r)}
-else if(a==='arch'){r=rec(id);r.arch=r.arch?0:1;save();close();render();toast(r.arch?'Archived. Linked records are untouched.':'Restored.')}
-else if(a==='snz'){if(k==='m'){S.m.filter(function(x){return x.id===id})[0].snooze=add(1)}else rec(id).f.snooze=add(1);save();render();toast('Snoozed until tomorrow.')}
-else if(a==='err'){m=S.m.filter(function(x){return x.id===id})[0];r=rec(m.rec);lk(mk('errand',{title:(m.kind==='return'?'Return ':'Warranty service: ')+r.title,location:'',due:m.date}),r,'created for');save();render();toast('Errand created and linked.')}
-else if(a==='dn'){
-if(k==='m'){m=S.m.filter(function(x){return x.id===id})[0];r=rec(m.rec);m.done=1;if(m.kind==='renewal'){r.f.renewal=addCycle(m.date,r.f.cycle);syncRem(r);toast('Renewal recorded. Next renewal '+fd(r.f.renewal)+'.')}}
-else{r=rec(id);r.done=r.done?0:1;
-if(r.done){var p=S.l.filter(function(l){return l.a===r.id}).map(function(l){return rec(l.b)}).filter(function(o){return o&&o.type==='purchase'})[0];
-var rm=p&&S.m.filter(function(x){return x.rec===p.id&&x.kind==='return'&&!x.done})[0];
-if(rm)toast('Errand complete. Mark the return as completed?','Mark return done',function(){rm.done=1;save();render()})}}
-save();render()}});
-document.addEventListener('input',function(e){if(e.target.id==='q'){Q=e.target.value;$('#list').innerHTML=lst()}});
-document.addEventListener('keydown',function(e){if(e.key==='Escape')close()});
-S=load();if(!S||!S.r)seed();
-var h=location.hash.slice(1);if(h==='life'||h==='plan'||h==='overview')V=h;
-render();
-})();
-</script>
-</body>
+      /* app shell */
+      .app {
+        display: grid;
+        grid-template-columns: 260px 1fr;
+        min-height: 100vh;
+      }
+      .sb {
+        position: sticky;
+        top: env(safe-area-inset-top, 0px);
+        height: calc(100vh - env(safe-area-inset-top, 0px));
+        padding: 28px 18px 22px;
+        background: var(--side);
+        border-right: 1px solid var(--line);
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+      }
+      .bw {
+        margin-bottom: 28px;
+        padding: 0 8px;
+      }
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 24px;
+        font-weight: 700;
+        letter-spacing: 0.01em;
+      }
+      .brand svg {
+        flex: none;
+      }
+      .tagl {
+        font-size: 13px;
+        color: var(--mute);
+        margin-top: 4px;
+      }
+      .nv {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        border: 0;
+        background: none;
+        color: var(--mute);
+        font:
+          600 15px "Figtree",
+          sans-serif;
+        padding: 11px 12px;
+        border-radius: 10px;
+        text-align: left;
+        cursor: pointer;
+        transition:
+          background 0.15s,
+          color 0.15s;
+      }
+      .nv:hover {
+        color: var(--ink);
+        background: var(--raise);
+      }
+      .nv.on {
+        background: var(--acc-l);
+        color: var(--acc);
+      }
+      .nv svg {
+        flex: none;
+      }
+      .add {
+        margin-top: 16px;
+        padding: 11px 16px !important;
+        font-size: 15px !important;
+      }
+      .me {
+        margin-top: auto;
+        border-top: 1px solid var(--line);
+        padding: 16px 8px 0;
+      }
+      .who {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+        margin-bottom: 12px;
+        min-width: 0;
+      }
+      .who > div {
+        min-width: 0;
+      }
+      .who b {
+        display: block;
+        font-size: 15px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .who .sm {
+        display: block;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .av {
+        flex: none;
+        width: 38px;
+        height: 38px;
+        border-radius: 50%;
+        background: var(--acc);
+        color: var(--acc-ink);
+        display: grid;
+        place-items: center;
+        font:
+          700 17px "Bricolage Grotesque",
+          sans-serif;
+      }
+      .note {
+        margin: 12px 0 0;
+        font-size: 13px;
+        color: var(--mute);
+      }
+      .top {
+        display: none;
+      }
+      main {
+        padding: 48px clamp(20px, 4vw, 56px) 90px;
+        max-width: 980px;
+        width: 100%;
+      }
+
+      /* type helpers */
+      .eyebrow {
+        font-size: 15px;
+        color: var(--mute);
+        font-weight: 600;
+        margin-bottom: 8px;
+      }
+      .mute {
+        color: var(--mute);
+      }
+      .sm {
+        font-size: 14px;
+      }
+      .lead {
+        font-size: 19px;
+        margin: 0;
+      }
+
+      /* stats */
+      .stats {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+        gap: 14px;
+        margin: 28px 0 6px;
+        max-width: 520px;
+      }
+      .stat {
+        background: var(--card);
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        padding: 18px 20px;
+        color: var(--mute);
+        font-size: 14px;
+      }
+      .stat b {
+        display: block;
+        font-size: 48px;
+        line-height: 1.05;
+        font-weight: 700;
+        color: var(--ink);
+        margin-bottom: 2px;
+      }
+      .stat:first-child b {
+        color: var(--acc);
+      }
+
+      /* rows */
+      .item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 16px;
+        flex-wrap: wrap;
+        background: var(--card);
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        padding: 14px 16px 14px 14px;
+        margin-bottom: 10px;
+        transition: border-color 0.15s;
+      }
+      .item.click {
+        cursor: pointer;
+      }
+      .item.click:hover {
+        border-color: var(--acc);
+      }
+      .grow {
+        flex: 1;
+        min-width: 190px;
+      }
+      .item b.tt,
+      .item .grow > b {
+        font-weight: 600;
+        font-size: 16px;
+      }
+      .acts {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        align-items: center;
+      }
+      .cd {
+        flex: none;
+        width: 68px;
+        height: 64px;
+        border-radius: 12px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        line-height: 1;
+      }
+      .cd b {
+        font-size: 26px;
+        font-weight: 700;
+        display: block;
+      }
+      .cd span {
+        font-size: 11.5px;
+        font-weight: 600;
+        margin-top: 5px;
+        white-space: nowrap;
+      }
+      .cd.u0 {
+        background: var(--warn-l);
+        color: var(--warn);
+      }
+      .cd.u1 {
+        background: var(--amb-l);
+        color: var(--amb);
+      }
+      .cd.u2 {
+        background: var(--acc-l);
+        color: var(--acc);
+      }
+      .tag {
+        display: inline-block;
+        background: var(--acc-l);
+        color: var(--acc);
+        border-radius: 7px;
+        padding: 3px 10px;
+        font-size: 13px;
+        font-weight: 600;
+      }
+      .tag.warn {
+        background: var(--warn-l);
+        color: var(--warn);
+      }
+
+      /* buttons, inputs */
+      .b {
+        border: 1px solid var(--line);
+        background: var(--raise);
+        color: var(--ink);
+        border-radius: 10px;
+        padding: 8px 14px;
+        font:
+          600 14px "Figtree",
+          sans-serif;
+        cursor: pointer;
+        transition:
+          border-color 0.15s,
+          background 0.15s;
+      }
+      .b:hover {
+        border-color: var(--acc);
+      }
+      .b.p {
+        background: var(--acc);
+        border-color: var(--acc);
+        color: var(--acc-ink);
+      }
+      .b.p:hover {
+        filter: brightness(1.08);
+      }
+      .b.g {
+        background: none;
+        font-size: 13px;
+        padding: 6px 11px;
+        color: var(--mute);
+      }
+      .b.g:hover {
+        color: var(--ink);
+      }
+      .in,
+      .md input,
+      .md select,
+      .af input {
+        width: 100%;
+        padding: 11px 13px;
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        background: var(--bg);
+        color: var(--ink);
+        font:
+          400 16px "Figtree",
+          sans-serif;
+        transition:
+          border-color 0.15s,
+          box-shadow 0.15s;
+      }
+      .in:focus,
+      .md input:focus,
+      .md select:focus,
+      .af input:focus {
+        outline: none;
+        border-color: var(--acc);
+        box-shadow: 0 0 0 3px var(--acc-l);
+      }
+      .chips {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        margin: 14px 0 20px;
+      }
+      .chip {
+        border: 1px solid var(--line);
+        background: none;
+        color: var(--mute);
+        border-radius: 999px;
+        padding: 6px 14px;
+        font:
+          600 14px "Figtree",
+          sans-serif;
+        cursor: pointer;
+        transition:
+          color 0.15s,
+          border-color 0.15s;
+      }
+      .chip:hover {
+        color: var(--ink);
+        border-color: var(--acc);
+      }
+      .chip.on {
+        background: var(--acc);
+        color: var(--acc-ink);
+        border-color: var(--acc);
+      }
+
+      /* modal */
+      .ov {
+        position: fixed;
+        inset: 0;
+        background: var(--scrim);
+        backdrop-filter: blur(6px);
+        -webkit-backdrop-filter: blur(6px);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        padding: 16px;
+        z-index: 30;
+      }
+      .ov.on {
+        display: flex;
+      }
+      .md {
+        background: var(--card);
+        border: 1px solid var(--line);
+        box-shadow: var(--shadow);
+        border-radius: 20px;
+        max-width: 560px;
+        width: 100%;
+        max-height: 88vh;
+        overflow: auto;
+        padding: 26px;
+        animation: pop 0.18s ease-out;
+      }
+      @keyframes pop {
+        from {
+          opacity: 0;
+          transform: translateY(8px) scale(0.98);
+        }
+        to {
+          opacity: 1;
+          transform: none;
+        }
+      }
+      .mh {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 12px;
+        margin-bottom: 16px;
+      }
+      .mh h2 {
+        margin: 8px 0 0;
+      }
+      .md label {
+        display: block;
+        font-size: 14px;
+        font-weight: 500;
+        color: var(--mute);
+        margin: 14px 0 0;
+      }
+      .md label input,
+      .md label select {
+        margin-top: 6px;
+      }
+      .md label.ck {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        color: var(--ink);
+        font-size: 15px;
+      }
+      .md label.ck input {
+        width: auto;
+        margin: 0;
+        accent-color: var(--acc);
+      }
+      fieldset {
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        margin: 20px 0 0;
+        padding: 4px 14px 14px;
+      }
+      legend {
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--mute);
+        padding: 0 6px;
+      }
+      dl {
+        display: grid;
+        grid-template-columns: 150px 1fr;
+        gap: 10px 14px;
+        margin: 0;
+      }
+      dt {
+        color: var(--mute);
+        font-size: 14px;
+      }
+      dd {
+        margin: 0;
+      }
+      .toast {
+        position: fixed;
+        left: 50%;
+        bottom: 96px;
+        transform: translateX(-50%);
+        background: var(--ink);
+        color: var(--bg);
+        border-radius: 12px;
+        padding: 12px 16px;
+        display: none;
+        align-items: center;
+        gap: 14px;
+        z-index: 40;
+        max-width: 92vw;
+        font-size: 15px;
+        font-weight: 500;
+        box-shadow: var(--shadow);
+      }
+      .toast.on {
+        display: flex;
+      }
+      .toast .b {
+        background: var(--bg);
+        color: var(--ink);
+        border-color: transparent;
+      }
+      .done .tt {
+        text-decoration: line-through;
+        color: var(--mute);
+      }
+      .done {
+        opacity: 0.75;
+      }
+
+      /* login */
+      #auth {
+        display: none;
+        min-height: 100vh;
+      }
+      body.locked #auth {
+        display: grid;
+        grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+      }
+      body.locked .app,
+      body.locked .top {
+        display: none;
+      }
+      .hero {
+        padding: 44px clamp(28px, 5vw, 72px);
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        gap: 40px;
+        background: var(--side);
+        border-right: 1px solid var(--line);
+      }
+      .hero h1 {
+        font-size: clamp(34px, 4.4vw, 56px);
+        max-width: 13em;
+        margin: 0 0 14px;
+      }
+      .hero p {
+        margin: 0;
+        max-width: 30em;
+        font-size: 18px;
+      }
+      .demo {
+        display: grid;
+        gap: 10px;
+        max-width: 440px;
+      }
+      .demo .item {
+        margin: 0;
+        flex-wrap: nowrap;
+      }
+      .pane {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 32px 20px;
+      }
+      .af {
+        width: 100%;
+        max-width: 400px;
+      }
+      .af h2 {
+        margin: 0 0 6px;
+      }
+      .af p {
+        margin: 0;
+      }
+      .seg {
+        display: flex;
+        background: var(--card);
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        padding: 4px;
+        gap: 4px;
+        margin: 0 0 24px;
+      }
+      .seg button {
+        flex: 1;
+        border: 0;
+        background: none;
+        color: var(--mute);
+        padding: 9px;
+        border-radius: 9px;
+        font:
+          600 15px "Figtree",
+          sans-serif;
+        cursor: pointer;
+      }
+      .seg button.on {
+        background: var(--raise);
+        color: var(--ink);
+      }
+      .af label {
+        display: block;
+        font-size: 14px;
+        font-weight: 500;
+        color: var(--mute);
+        margin: 16px 0 0;
+      }
+      .af input {
+        margin-top: 6px;
+      }
+      .err {
+        margin: 16px 0 0;
+        padding: 10px 13px;
+        border-radius: 10px;
+        background: var(--warn-l);
+        color: var(--warn);
+        font-size: 14px;
+        font-weight: 500;
+      }
+      .err[hidden] {
+        display: none;
+      }
+      .af .b.p {
+        width: 100%;
+        margin-top: 22px;
+        padding: 12px;
+        font-size: 16px;
+      }
+      .fine {
+        margin-top: 18px !important;
+        font-size: 13px;
+        color: var(--mute);
+      }
+
+      @media (min-width: 861px) {
+        .toast {
+          bottom: 28px;
+        }
+      }
+      @media (max-width: 860px) {
+        .app {
+          display: block;
+        }
+        .top {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding: 14px clamp(20px, 4vw, 56px) 0;
+        }
+        .top .brand {
+          font-size: 21px;
+        }
+        .sb {
+          position: fixed;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          top: auto;
+          height: auto;
+          flex-direction: row;
+          gap: 4px;
+          padding: 8px 10px calc(8px + env(safe-area-inset-bottom, 0px));
+          border-top: 1px solid var(--line);
+          border-right: 0;
+          z-index: 10;
+        }
+        .bw,
+        .me {
+          display: none;
+        }
+        .nv,
+        .add {
+          flex: 1;
+          margin: 0;
+          padding: 8px 4px !important;
+        }
+        .nv {
+          flex-direction: column;
+          gap: 3px;
+          font-size: 12.5px;
+          text-align: center;
+          justify-content: center;
+        }
+        .add {
+          font-size: 13px !important;
+        }
+        main {
+          padding-top: 26px;
+          padding-bottom: 120px;
+        }
+        dl {
+          grid-template-columns: 1fr;
+        }
+        body.locked #auth {
+          display: block;
+        }
+        .hero {
+          padding: 28px 22px;
+          border-right: 0;
+          border-bottom: 1px solid var(--line);
+          gap: 18px;
+        }
+        .hero p {
+          font-size: 16px;
+        }
+        .demo {
+          display: none;
+        }
+        .pane {
+          padding: 28px 22px 48px;
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        * {
+          transition: none !important;
+          animation: none !important;
+        }
+      }
+    </style>
+  </head>
+  <body class="locked">
+    <!-- login / sign-up -->
+    <section id="auth">
+      <div class="hero">
+        <div class="brand">
+          <svg width="28" height="28" viewBox="0 0 26 26" aria-hidden="true">
+            <circle
+              cx="13"
+              cy="13"
+              r="10"
+              fill="none"
+              stroke="currentColor"
+              stroke-opacity=".25"
+              stroke-width="3"
+            />
+            <path
+              d="M13 3a10 10 0 0 1 10 10"
+              fill="none"
+              stroke="var(--acc)"
+              stroke-width="3"
+              stroke-linecap="round"
+            /></svg
+          >LIFEOS
+        </div>
+        <div>
+          <h1>Know what runs out before it does.</h1>
+          <p class="mute">
+            Return windows, warranties, food expiry dates and renewals, all
+            counting down in one place.
+          </p>
+        </div>
+        <div class="demo" aria-hidden="true">
+          <div class="item">
+            <div class="cd u0"><b>1</b><span>day</span></div>
+            <div class="grow">
+              <b class="tt">Milk (opened)</b>
+              <div class="mute sm">Expires tomorrow</div>
+            </div>
+          </div>
+          <div class="item">
+            <div class="cd u1"><b>2</b><span>days</span></div>
+            <div class="grow">
+              <b class="tt">Wireless headphones</b>
+              <div class="mute sm">Return deadline</div>
+            </div>
+          </div>
+          <div class="item">
+            <div class="cd u1"><b>3</b><span>days</span></div>
+            <div class="grow">
+              <b class="tt">Music streaming</b>
+              <div class="mute sm">Renews</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="pane"><form id="af" class="af" novalidate></form></div>
+    </section>
+
+    <header class="top">
+      <div class="brand">
+        <svg width="24" height="24" viewBox="0 0 26 26" aria-hidden="true">
+          <circle
+            cx="13"
+            cy="13"
+            r="10"
+            fill="none"
+            stroke="currentColor"
+            stroke-opacity=".25"
+            stroke-width="3"
+          />
+          <path
+            d="M13 3a10 10 0 0 1 10 10"
+            fill="none"
+            stroke="var(--acc)"
+            stroke-width="3"
+            stroke-linecap="round"
+          /></svg
+        >LIFEOS
+      </div>
+      <div class="acts">
+        <button class="b g" data-a="theme" data-t="1">Light mode</button
+        ><button class="b g" data-a="lo">Log out</button>
+      </div>
+    </header>
+
+    <div class="app">
+      <aside class="sb">
+        <div class="bw">
+          <div class="brand">
+            <svg width="28" height="28" viewBox="0 0 26 26" aria-hidden="true">
+              <circle
+                cx="13"
+                cy="13"
+                r="10"
+                fill="none"
+                stroke="currentColor"
+                stroke-opacity=".25"
+                stroke-width="3"
+              />
+              <path
+                d="M13 3a10 10 0 0 1 10 10"
+                fill="none"
+                stroke="var(--acc)"
+                stroke-width="3"
+                stroke-linecap="round"
+              /></svg
+            >LIFEOS
+          </div>
+          <div class="tagl">Your personal command center</div>
+        </div>
+        <button class="nv" data-a="nav" data-id="overview">
+          <svg
+            width="19"
+            height="19"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <rect x="3" y="3" width="7" height="9" rx="2" />
+            <rect x="14" y="3" width="7" height="5" rx="2" />
+            <rect x="14" y="12" width="7" height="9" rx="2" />
+            <rect x="3" y="16" width="7" height="5" rx="2" /></svg
+          >Overview
+        </button>
+        <button class="nv" data-a="nav" data-id="life">
+          <svg
+            width="19"
+            height="19"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <path d="M21 8v12a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V8" />
+            <rect x="2" y="3" width="20" height="5" rx="1.5" />
+            <path d="M10 12h4" /></svg
+          >My Life
+        </button>
+        <button class="nv" data-a="nav" data-id="plan">
+          <svg
+            width="19"
+            height="19"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <rect x="3" y="4" width="18" height="17" rx="3" />
+            <path d="M8 2v4M16 2v4M3 10h18" /></svg
+          >Plan
+        </button>
+        <button class="b p add" data-a="add">+ Add</button>
+        <div class="me">
+          <div class="who">
+            <span class="av" id="uav"></span>
+            <div>
+              <b id="uname"></b><span class="mute sm" id="uemail"></span>
+            </div>
+          </div>
+          <div class="acts">
+            <button class="b g" data-a="theme" data-t="1">Light mode</button
+            ><button class="b g" data-a="lo">Log out</button>
+          </div>
+          <p class="note">Saved in this browser</p>
+        </div>
+      </aside>
+      <main id="main"></main>
+    </div>
+    <div class="ov" id="ov"><div class="md" id="md"></div></div>
+    <div class="toast" id="toast"></div>
+    <script>
+      (function () {
+        var K = "lifeos-v1",
+          S,
+          V = "overview",
+          Q = "",
+          TF = "all",
+          FT = "purchase",
+          ED = null,
+          TA = null,
+          TM;
+        var UK = "lifeos-users",
+          SK = "lifeos-session",
+          TK = "lifeos-theme",
+          U = {},
+          CU = null,
+          AM = "in";
+        function $(s) {
+          return document.querySelector(s);
+        }
+        var TYPES = {
+          purchase: "Purchase",
+          belonging: "Belonging",
+          food: "Food",
+          subscription: "Subscription",
+          document: "Document",
+          errand: "Errand",
+        };
+        var CUR = ["KRW", "USD", "EUR", "JPY"];
+        var F = {
+          purchase: [
+            ["title", "Item name", "text"],
+            ["merchant", "Merchant", "text"],
+            ["price", "Price", "number"],
+            ["currency", "Currency", "select", CUR],
+            ["date", "Purchase date", "date"],
+            ["returnBy", "Return deadline", "date"],
+            ["warrantyEnd", "Warranty ends", "date"],
+            [
+              "receipt",
+              "Receipt file name (creates a linked document)",
+              "text",
+            ],
+          ],
+          belonging: [
+            ["title", "Name", "text"],
+            ["category", "Category", "text"],
+            ["location", "Stored in", "text"],
+            ["serial", "Serial number", "text"],
+          ],
+          food: [
+            ["title", "Food", "text"],
+            ["qty", "Quantity", "text"],
+            ["location", "Location", "text"],
+            ["expires", "Expiration date", "date"],
+            ["opened", "Opened on", "date"],
+          ],
+          subscription: [
+            ["title", "Service", "text"],
+            ["cost", "Price", "number"],
+            ["currency", "Currency", "select", CUR],
+            ["cycle", "Billing", "select", ["monthly", "yearly"]],
+            ["renewal", "Next renewal", "date"],
+            ["remind", "Remind me (days before)", "number"],
+          ],
+          document: [
+            ["title", "Document name", "text"],
+            [
+              "docType",
+              "Type",
+              "select",
+              ["receipt", "warranty", "manual", "other"],
+            ],
+            ["note", "Note", "text"],
+          ],
+          errand: [
+            ["title", "Errand", "text"],
+            ["location", "Where", "text"],
+            ["due", "Due date", "date"],
+          ],
+        };
+        var HINT = {
+          food: "An expiration reminder is created automatically.",
+          subscription: "A renewal reminder is created automatically.",
+        };
+        var KR = {
+          purchase: { return: "returnBy", warranty: "warrantyEnd" },
+          food: { expiry: "expires" },
+          subscription: { renewal: "renewal" },
+        };
+        var KL = {
+          return: "Return deadline",
+          warranty: "Warranty ends",
+          expiry: "Expires",
+          renewal: "Renews",
+        };
+        var LEAD = { return: 7, warranty: 30, expiry: 3 };
+        var EXP = { KRW: 0, JPY: 0 };
+        function esc(s) {
+          return String(s == null ? "" : s).replace(/[&<>"]/g, function (c) {
+            return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c];
+          });
+        }
+        function uid() {
+          return "x" + Math.random().toString(36).slice(2, 9);
+        }
+        function iso(d) {
+          var m = d.getMonth() + 1,
+            x = d.getDate();
+          return (
+            d.getFullYear() +
+            "-" +
+            (m < 10 ? "0" : "") +
+            m +
+            "-" +
+            (x < 10 ? "0" : "") +
+            x
+          );
+        }
+        function add(n) {
+          var d = new Date();
+          d.setHours(0, 0, 0, 0);
+          d.setDate(d.getDate() + n);
+          return iso(d);
+        }
+        var T = add(0);
+        function diff(s) {
+          return Math.round(
+            (new Date(s + "T00:00:00") - new Date(T + "T00:00:00")) / 864e5,
+          );
+        }
+        function rel(s) {
+          var n = diff(s);
+          return n === 0
+            ? "today"
+            : n === 1
+              ? "tomorrow"
+              : n === -1
+                ? "yesterday"
+                : n > 0
+                  ? "in " + n + " days"
+                  : -n + " days ago";
+        }
+        function fd(s) {
+          return s
+            ? new Date(s + "T00:00:00").toLocaleDateString(undefined, {
+                month: "short",
+                day: "numeric",
+                year: "numeric",
+              })
+            : "";
+        }
+        function addCycle(s, c) {
+          var d = new Date(s + "T00:00:00");
+          if (c === "yearly") d.setFullYear(d.getFullYear() + 1);
+          else d.setMonth(d.getMonth() + 1);
+          return iso(d);
+        }
+        function ex(c) {
+          return EXP[c] !== undefined ? EXP[c] : 2;
+        }
+        function minor(v, c) {
+          return Math.round(parseFloat(v || 0) * Math.pow(10, ex(c)));
+        }
+        function dec(m, c) {
+          return m == null ? "" : m / Math.pow(10, ex(c));
+        }
+        function money(m, c) {
+          try {
+            return new Intl.NumberFormat(undefined, {
+              style: "currency",
+              currency: c,
+            }).format(m / Math.pow(10, ex(c)));
+          } catch (e) {
+            return dec(m, c) + " " + c;
+          }
+        }
+        function pad(n) {
+          return n < 10 ? "0" + n : "" + n;
+        }
+        function load() {
+          try {
+            var s = localStorage.getItem(K);
+            if (s) return JSON.parse(s);
+          } catch (e) {}
+          return null;
+        }
+        function save() {
+          try {
+            localStorage.setItem(K, JSON.stringify(S));
+          } catch (e) {}
+        }
+        function rec(id) {
+          return S.r.filter(function (r) {
+            return r.id === id;
+          })[0];
+        }
+        function mk(type, f) {
+          var r = {
+            id: uid(),
+            type: type,
+            title: f.title,
+            f: f,
+            arch: 0,
+            done: 0,
+          };
+          S.r.push(r);
+          return r;
+        }
+        function lk(a, b, rl) {
+          S.l.push({ a: a.id, b: b.id, rel: rl });
+        }
+        function syncRem(r, only) {
+          var k = KR[r.type];
+          if (!k) return;
+          for (var n in k) {
+            if (only && only.indexOf(n) < 0) continue;
+            var dt = r.f[k[n]];
+            if (!dt) continue;
+            var x = null;
+            S.m.forEach(function (m) {
+              if (m.rec === r.id && m.kind === n && !m.done) x = m;
+            });
+            if (x) x.date = dt;
+            else
+              S.m.push({
+                id: uid(),
+                rec: r.id,
+                kind: n,
+                date: dt,
+                done: 0,
+                snooze: "",
+              });
+          }
+        }
+        function seed() {
+          S = { r: [], l: [], m: [] };
+          var p = mk("purchase", {
+            title: "Wireless headphones",
+            merchant: "Electronics store",
+            priceM: 129000,
+            currency: "KRW",
+            date: add(-12),
+            returnBy: add(2),
+            warrantyEnd: add(353),
+            receipt: "headphones-receipt.pdf",
+          });
+          var b = mk("belonging", {
+            title: "Wireless headphones",
+            category: "Electronics",
+            location: "Desk drawer",
+            serial: "",
+          });
+          var d = mk("document", {
+            title: "headphones-receipt.pdf",
+            docType: "receipt",
+            note: "",
+          });
+          lk(b, p, "bought in");
+          lk(d, p, "receipt for");
+          syncRem(p);
+          syncRem(
+            mk("subscription", {
+              title: "Music streaming",
+              costM: 10900,
+              currency: "KRW",
+              cycle: "monthly",
+              renewal: add(3),
+              remind: 3,
+            }),
+          );
+          syncRem(
+            mk("subscription", {
+              title: "Cloud storage",
+              costM: 299,
+              currency: "USD",
+              cycle: "monthly",
+              renewal: add(21),
+              remind: 3,
+            }),
+          );
+          syncRem(
+            mk("food", {
+              title: "Milk (opened)",
+              qty: "1",
+              location: "Fridge",
+              expires: add(1),
+              opened: add(-3),
+            }),
+          );
+          syncRem(
+            mk("food", {
+              title: "Eggs",
+              qty: "10",
+              location: "Fridge",
+              expires: add(6),
+              opened: "",
+            }),
+          );
+          mk("errand", {
+            title: "Pick up dry cleaning",
+            location: "Laundry",
+            due: add(5),
+          });
+          save();
+        }
+        function lead(m, r) {
+          return m.kind === "renewal" ? +r.f.remind || 3 : LEAD[m.kind];
+        }
+        function items() {
+          var o = [];
+          S.m.forEach(function (m) {
+            var r = rec(m.rec);
+            if (!r || r.arch || m.done || (m.snooze && m.snooze > T)) return;
+            var n = diff(m.date);
+            if (n <= lead(m, r))
+              o.push({ k: "m", m: m, r: r, n: n, t: m.date });
+          });
+          S.r.forEach(function (r) {
+            if (
+              r.type === "errand" &&
+              !r.arch &&
+              !r.done &&
+              !(r.f.snooze && r.f.snooze > T) &&
+              r.f.due &&
+              diff(r.f.due) <= 3
+            )
+              o.push({ k: "e", r: r, n: diff(r.f.due), t: r.f.due });
+          });
+          return o.sort(function (a, b) {
+            return a.n - b.n;
+          });
+        }
+        function hasErr(r) {
+          return S.l.some(function (l) {
+            var e = rec(l.a);
+            return l.b === r.id && e && e.type === "errand";
+          });
+        }
+        function meta(r) {
+          var f = r.f;
+          if (r.type === "purchase")
+            return f.returnBy
+              ? "Return by " + fd(f.returnBy)
+              : "Purchased " + fd(f.date);
+          if (r.type === "belonging") return f.location || f.category || "";
+          if (r.type === "food")
+            return f.expires ? "Expires " + rel(f.expires) : "";
+          if (r.type === "subscription")
+            return money(f.costM, f.currency) + " · renews " + fd(f.renewal);
+          if (r.type === "document") return f.docType;
+          return f.due ? "Due " + fd(f.due) : "";
+        }
+        function cd(n) {
+          var v =
+            n < 0
+              ? [-n, n === -1 ? "day late" : "days late"]
+              : n === 0
+                ? ["0", "today"]
+                : [n, n === 1 ? "day" : "days"];
+          return (
+            '<div class="cd ' +
+            (n <= 1 ? "u0" : n <= 3 ? "u1" : "u2") +
+            '"><b>' +
+            v[0] +
+            "</b><span>" +
+            v[1] +
+            "</span></div>"
+          );
+        }
+        function row(x) {
+          var r = x.r,
+            m = x.m,
+            id = x.k === "m" ? m.id : r.id,
+            lab = x.k === "m" ? KL[m.kind] : "Due";
+          var mkE =
+            x.k === "m" &&
+            (m.kind === "return" || m.kind === "warranty") &&
+            !hasErr(r)
+              ? '<button class="b" data-a="err" data-id="' +
+                m.id +
+                '">Make errand</button>'
+              : "";
+          return (
+            '<div class="item">' +
+            cd(x.n) +
+            '<div class="grow"><b class="tt">' +
+            esc(r.title) +
+            '</b><div class="mute sm">' +
+            TYPES[r.type] +
+            " · " +
+            lab +
+            " " +
+            fd(x.t) +
+            '</div></div><div class="acts">' +
+            mkE +
+            '<button class="b" data-a="snz" data-k="' +
+            x.k +
+            '" data-id="' +
+            id +
+            '">Snooze</button><button class="b p" data-a="dn" data-k="' +
+            x.k +
+            '" data-id="' +
+            id +
+            '">' +
+            (x.k === "m" && m.kind === "renewal" ? "Renewed" : "Done") +
+            '</button><button class="b" data-a="open" data-id="' +
+            r.id +
+            '">Open</button></div></div>'
+          );
+        }
+        function greet() {
+          var h = new Date().getHours();
+          return h < 5
+            ? "Good evening"
+            : h < 12
+              ? "Good morning"
+              : h < 18
+                ? "Good afternoon"
+                : "Good evening";
+        }
+        function first() {
+          var u = U[CU];
+          return u && u.name ? u.name.split(" ")[0] : "";
+        }
+        function ov() {
+          var it = items(),
+            W = [
+              "No",
+              "One",
+              "Two",
+              "Three",
+              "Four",
+              "Five",
+              "Six",
+              "Seven",
+              "Eight",
+              "Nine",
+              "Ten",
+            ],
+            c = it.length,
+            rn = it.filter(function (x) {
+              return x.k === "m" && x.m.kind === "renewal";
+            }).length;
+          return (
+            '<div class="eyebrow">' +
+            new Date().toLocaleDateString(undefined, {
+              weekday: "long",
+              month: "long",
+              day: "numeric",
+            }) +
+            "</div><h1>" +
+            greet() +
+            (first() ? ", " + esc(first()) : "") +
+            '.</h1><p class="lead mute">' +
+            (c
+              ? (c < 11 ? W[c] : c) +
+                (c === 1 ? " thing deserves" : " things deserve") +
+                " your attention today."
+              : "Nothing needs your attention today.") +
+            '</p><div class="stats"><div class="stat"><b>' +
+            pad(c) +
+            '</b>Upcoming reminders</div><div class="stat"><b>' +
+            pad(rn) +
+            "</b>Renewals to review</div></div><h2>Your next actions</h2>" +
+            (c
+              ? it.map(row).join("")
+              : '<p class="mute">You’re all caught up.</p>')
+          );
+        }
+        function lst() {
+          var q = Q.toLowerCase(),
+            L = S.r.filter(function (r) {
+              if (TF === "archived") return r.arch;
+              if (r.arch) return false;
+              if (TF !== "all" && r.type !== TF) return false;
+              return (
+                !q ||
+                (
+                  r.title +
+                  " " +
+                  Object.keys(r.f)
+                    .map(function (k) {
+                      return r.f[k];
+                    })
+                    .join(" ")
+                )
+                  .toLowerCase()
+                  .indexOf(q) >= 0
+              );
+            });
+          return L.length
+            ? L.map(function (r) {
+                var n = S.l.filter(function (l) {
+                    return l.a === r.id || l.b === r.id;
+                  }).length,
+                  mt = meta(r);
+                return (
+                  '<div class="item click" data-a="open" data-id="' +
+                  r.id +
+                  '"><div class="grow"><b class="tt">' +
+                  esc(r.title) +
+                  '</b><div class="mute sm">' +
+                  TYPES[r.type] +
+                  (mt ? " · " + esc(mt) : "") +
+                  "</div></div>" +
+                  (n ? '<span class="tag">' + n + " linked</span>" : "") +
+                  "</div>"
+                );
+              }).join("")
+            : '<p class="mute">No records here.</p>';
+        }
+        function life() {
+          var ch = ["all"]
+            .concat(Object.keys(TYPES), ["archived"])
+            .map(function (t) {
+              return (
+                '<button class="chip' +
+                (TF === t ? " on" : "") +
+                '" data-a="tf" data-id="' +
+                t +
+                '">' +
+                (t === "all"
+                  ? "All"
+                  : t === "archived"
+                    ? "Archived"
+                    : TYPES[t]) +
+                "</button>"
+              );
+            })
+            .join("");
+          return (
+            '<h1>Everything you keep track of.</h1><input class="in" id="q" placeholder="Search your records" value="' +
+            esc(Q) +
+            '"><div class="chips">' +
+            ch +
+            '</div><div id="list">' +
+            lst() +
+            "</div>"
+          );
+        }
+        function plan() {
+          var ms = S.m
+            .filter(function (m) {
+              var r = rec(m.rec),
+                n = diff(m.date);
+              return r && !r.arch && !m.done && n <= 60 && n >= -30;
+            })
+            .sort(function (a, b) {
+              return a.date < b.date ? -1 : 1;
+            });
+          var tl = ms.length
+            ? ms
+                .map(function (m) {
+                  var r = rec(m.rec),
+                    n = diff(m.date);
+                  return (
+                    '<div class="item click" data-a="open" data-id="' +
+                    r.id +
+                    '">' +
+                    cd(n) +
+                    '<div class="grow"><b class="tt">' +
+                    esc(r.title) +
+                    '</b><div class="mute sm">' +
+                    KL[m.kind] +
+                    " · " +
+                    fd(m.date) +
+                    "</div></div></div>"
+                  );
+                })
+                .join("")
+            : '<p class="mute">Nothing coming up in the next 60 days.</p>';
+          var er =
+            S.r
+              .filter(function (r) {
+                return r.type === "errand" && !r.arch;
+              })
+              .map(function (r) {
+                return (
+                  '<div class="item' +
+                  (r.done ? " done" : "") +
+                  '"><div class="grow"><b class="tt">' +
+                  esc(r.title) +
+                  '</b><div class="mute sm">' +
+                  esc(r.f.location || "Anywhere") +
+                  (r.f.due ? " · due " + fd(r.f.due) : "") +
+                  '</div></div><button class="b" data-a="dn" data-k="e" data-id="' +
+                  r.id +
+                  '">' +
+                  (r.done ? "Reopen" : "Done") +
+                  "</button></div>"
+                );
+              })
+              .join("") || '<p class="mute">No errands yet.</p>';
+          var subs = S.r.filter(function (r) {
+              return r.type === "subscription" && !r.arch;
+            }),
+            tot = {};
+          var sb =
+            subs
+              .map(function (r) {
+                var y = r.f.cycle === "yearly" ? r.f.costM : r.f.costM * 12;
+                tot[r.f.currency] = (tot[r.f.currency] || 0) + y;
+                return (
+                  '<div class="item click" data-a="open" data-id="' +
+                  r.id +
+                  '"><div class="grow"><b class="tt">' +
+                  esc(r.title) +
+                  '</b><div class="mute sm">Renews ' +
+                  fd(r.f.renewal) +
+                  " · " +
+                  money(r.f.costM, r.f.currency) +
+                  " " +
+                  r.f.cycle +
+                  '</div></div><span class="tag">' +
+                  money(y, r.f.currency) +
+                  " / year</span></div>"
+                );
+              })
+              .join("") || '<p class="mute">No subscriptions yet.</p>';
+          var sum = Object.keys(tot)
+            .map(function (c) {
+              return money(tot[c], c);
+            })
+            .join(" + ");
+          return (
+            "<h1>What’s coming up.</h1><h2>Next 60 days</h2>" +
+            tl +
+            "<h2>Errands</h2>" +
+            er +
+            "<h2>Subscriptions</h2>" +
+            sb +
+            (sum ? "<p>Estimated yearly cost: <b>" + sum + "</b></p>" : "")
+          );
+        }
+        function render() {
+          $("#main").innerHTML =
+            V === "overview" ? ov() : V === "life" ? life() : plan();
+          document.querySelectorAll(".nv").forEach(function (n) {
+            n.classList.toggle("on", n.dataset.id === V);
+          });
+        }
+        function show(h) {
+          $("#md").innerHTML = h;
+          $("#ov").classList.add("on");
+        }
+        function close() {
+          $("#ov").classList.remove("on");
+        }
+        function toast(msg, lab, fn) {
+          var t = $("#toast");
+          t.innerHTML =
+            "<span>" +
+            esc(msg) +
+            "</span>" +
+            (lab ? '<button class="b" id="ta">' + esc(lab) + "</button>" : "");
+          t.classList.add("on");
+          TA = fn || null;
+          clearTimeout(TM);
+          TM = setTimeout(function () {
+            t.classList.remove("on");
+          }, 7000);
+        }
+        function val(r, d) {
+          var k = d[0],
+            f = r.f;
+          if (k === "price")
+            return f.priceM != null ? money(f.priceM, f.currency) : "";
+          if (k === "cost") return money(f.costM, f.currency);
+          var v = f[k];
+          if (!v) return "";
+          if (d[2] === "date") return fd(v);
+          if (k === "remind") return v + " days before";
+          return String(v);
+        }
+        function openRec(id) {
+          var r = rec(id);
+          if (!r) return;
+          var h =
+            '<div class="mh"><div><span class="tag">' +
+            TYPES[r.type] +
+            "</span><h2>" +
+            esc(r.title) +
+            '</h2></div><button class="b" data-a="x">Close</button></div><dl>';
+          F[r.type].forEach(function (d) {
+            if (d[0] === "title" || d[0] === "currency") return;
+            var v = val(r, d);
+            if (v) h += "<dt>" + d[1] + "</dt><dd>" + esc(v) + "</dd>";
+          });
+          if (r.type === "subscription")
+            h +=
+              "<dt>Estimated yearly cost</dt><dd>" +
+              money(
+                r.f.cycle === "yearly" ? r.f.costM : r.f.costM * 12,
+                r.f.currency,
+              ) +
+              "</dd>";
+          h += "</dl>";
+          var rm = S.m.filter(function (m) {
+            return m.rec === id && !m.done;
+          });
+          if (rm.length)
+            h +=
+              "<h3>Reminders</h3>" +
+              rm
+                .map(function (m) {
+                  return (
+                    '<div class="mute">' +
+                    KL[m.kind] +
+                    " · " +
+                    fd(m.date) +
+                    " (" +
+                    rel(m.date) +
+                    ")</div>"
+                  );
+                })
+                .join("");
+          var ls = S.l
+            .filter(function (l) {
+              return l.a === id || l.b === id;
+            })
+            .map(function (l) {
+              return rec(l.a === id ? l.b : l.a);
+            })
+            .filter(Boolean);
+          if (ls.length)
+            h +=
+              "<h3>Linked records</h3>" +
+              ls
+                .map(function (o) {
+                  return (
+                    '<div class="item click" data-a="open" data-id="' +
+                    o.id +
+                    '"><div class="grow"><b class="tt">' +
+                    esc(o.title) +
+                    '</b><div class="mute sm">' +
+                    TYPES[o.type] +
+                    "</div></div></div>"
+                  );
+                })
+                .join("");
+          h +=
+            '<div class="acts" style="margin-top:20px"><button class="b p" data-a="edit" data-id="' +
+            id +
+            '">Edit</button><button class="b" data-a="arch" data-id="' +
+            id +
+            '">' +
+            (r.arch ? "Restore" : "Archive") +
+            "</button></div>";
+          show(h);
+        }
+        function openForm(t, r) {
+          FT = t;
+          ED = r || null;
+          var h =
+            '<div class="mh"><h2 style="margin-top:0">' +
+            (r ? "Edit " : "Add ") +
+            TYPES[t].toLowerCase() +
+            '</h2><button class="b" data-a="x">Close</button></div>';
+          if (!r)
+            h +=
+              '<div class="chips" style="margin-top:0">' +
+              Object.keys(TYPES)
+                .map(function (k) {
+                  return (
+                    '<button class="chip' +
+                    (k === t ? " on" : "") +
+                    '" type="button" data-a="ft" data-id="' +
+                    k +
+                    '">' +
+                    TYPES[k] +
+                    "</button>"
+                  );
+                })
+                .join("") +
+              "</div>";
+          h += '<form id="fm">';
+          F[t].forEach(function (d) {
+            var k = d[0],
+              v;
+            if (r)
+              v =
+                k === "price"
+                  ? dec(r.f.priceM, r.f.currency)
+                  : k === "cost"
+                    ? dec(r.f.costM, r.f.currency)
+                    : r.f[k] || "";
+            else
+              v =
+                k === "date" && t === "purchase"
+                  ? T
+                  : k === "currency"
+                    ? "KRW"
+                    : k === "remind"
+                      ? 3
+                      : "";
+            h +=
+              "<label>" +
+              d[1] +
+              (d[2] === "select"
+                ? '<select name="' +
+                  k +
+                  '">' +
+                  d[3]
+                    .map(function (o) {
+                      return (
+                        "<option" +
+                        (o == v ? " selected" : "") +
+                        ">" +
+                        o +
+                        "</option>"
+                      );
+                    })
+                    .join("") +
+                  "</select>"
+                : '<input name="' +
+                  k +
+                  '" type="' +
+                  d[2] +
+                  '" value="' +
+                  esc(v) +
+                  '"' +
+                  (k === "title" ? " required" : "") +
+                  (d[2] === "number" ? ' step="any" min="0"' : "") +
+                  ">") +
+              "</label>";
+          });
+          if (!r && (t === "document" || t === "errand"))
+            h +=
+              '<label>Link to<select name="_link"><option value="">None</option>' +
+              S.r
+                .filter(function (o) {
+                  return !o.arch;
+                })
+                .map(function (o) {
+                  return (
+                    '<option value="' +
+                    o.id +
+                    '">' +
+                    TYPES[o.type] +
+                    ": " +
+                    esc(o.title) +
+                    "</option>"
+                  );
+                })
+                .join("") +
+              "</select></label>";
+          if (!r && t === "purchase")
+            h +=
+              '<fieldset><legend>When saved, also…</legend><label class="ck"><input type="checkbox" name="_stuff" checked> Track it in My Stuff</label><label class="ck"><input type="checkbox" name="_ret" checked> Return reminder</label><label class="ck"><input type="checkbox" name="_war" checked> Warranty reminder</label><label class="ck"><input type="checkbox" name="_err"> Create a return errand</label></fieldset>';
+          if (HINT[t]) h += '<p class="mute sm">' + HINT[t] + "</p>";
+          h +=
+            '<div class="acts" style="margin-top:18px"><button class="b p" type="submit">Save</button></div></form>';
+          show(h);
+        }
+
+        /* ---------- theme ---------- */
+        function theme(t) {
+          document.documentElement.setAttribute("data-theme", t);
+          try {
+            localStorage.setItem(TK, t);
+          } catch (e) {}
+          document.querySelectorAll("[data-t]").forEach(function (b) {
+            b.textContent = t === "dark" ? "Light mode" : "Dark mode";
+          });
+        }
+
+        /* ---------- accounts (front-end only: stored in this browser) ---------- */
+        function lsGet(k) {
+          try {
+            return JSON.parse(localStorage.getItem(k));
+          } catch (e) {
+            return null;
+          }
+        }
+        function lsSet(k, v) {
+          try {
+            localStorage.setItem(k, JSON.stringify(v));
+          } catch (e) {}
+        }
+        function hashPw(pw, salt) {
+          if (window.crypto && crypto.subtle && window.TextEncoder) {
+            var enc = new TextEncoder();
+            return crypto.subtle
+              .importKey("raw", enc.encode(pw), "PBKDF2", false, ["deriveBits"])
+              .then(function (k) {
+                return crypto.subtle.deriveBits(
+                  {
+                    name: "PBKDF2",
+                    salt: enc.encode(salt),
+                    iterations: 100000,
+                    hash: "SHA-256",
+                  },
+                  k,
+                  256,
+                );
+              })
+              .then(function (b) {
+                return Array.prototype.map
+                  .call(new Uint8Array(b), function (x) {
+                    return ("0" + x.toString(16)).slice(-2);
+                  })
+                  .join("");
+              });
+          }
+          var h = 5381,
+            s = salt + pw;
+          for (var i = 0; i < s.length; i++)
+            h = ((h << 5) + h + s.charCodeAt(i)) | 0;
+          return Promise.resolve("f" + h);
+        }
+        function renderAuth() {
+          var up = AM === "up";
+          $("#af").innerHTML =
+            '<div class="seg" role="tablist"><button type="button" role="tab" class="' +
+            (up ? "" : "on") +
+            '" data-a="am" data-id="in">Sign in</button><button type="button" role="tab" class="' +
+            (up ? "on" : "") +
+            '" data-a="am" data-id="up">Create account</button></div>' +
+            "<h2>" +
+            (up ? "Create your account" : "Welcome back") +
+            '</h2><p class="mute">' +
+            (up
+              ? "Start tracking your deadlines in under a minute."
+              : "Sign in to see what needs your attention.") +
+            "</p>" +
+            (up
+              ? '<label>Name<input name="name" type="text" autocomplete="name" required></label>'
+              : "") +
+            '<label>Email<input name="email" type="email" autocomplete="username" required></label>' +
+            '<label>Password<input name="pw" type="password" autocomplete="' +
+            (up ? "new-password" : "current-password") +
+            '" minlength="6" required></label>' +
+            '<div class="err" id="aerr" role="alert" hidden></div>' +
+            '<button class="b p" type="submit">' +
+            (up ? "Create account" : "Sign in") +
+            "</button>" +
+            '<p class="fine">Accounts are stored in this browser only. Connect a backend before storing anything sensitive.</p>';
+          var f = $("#af input");
+          if (f) f.focus();
+        }
+        function showAuth() {
+          document.body.classList.add("locked");
+          AM = Object.keys(U).length ? "in" : "up";
+          renderAuth();
+        }
+        function login(em) {
+          lsSet(SK, em);
+          start(em);
+        }
+        function start(em) {
+          CU = em;
+          K = "lifeos-v1:" + em;
+          S = load();
+          if (!S || !S.r) seed();
+          V = "overview";
+          var h = location.hash.slice(1);
+          if (h === "life" || h === "plan" || h === "overview") V = h;
+          var u = U[em] || {};
+          $("#uname").textContent = u.name || em;
+          $("#uemail").textContent = em;
+          $("#uav").textContent = (u.name || em).charAt(0).toUpperCase();
+          document.body.classList.remove("locked");
+          render();
+          window.scrollTo(0, 0);
+        }
+        function logout() {
+          try {
+            localStorage.removeItem(SK);
+          } catch (e) {}
+          CU = null;
+          S = null;
+          close();
+          $("#toast").classList.remove("on");
+          showAuth();
+        }
+        function doAuth(f) {
+          var D = new FormData(f),
+            em = String(D.get("email") || "")
+              .trim()
+              .toLowerCase(),
+            pw = String(D.get("pw") || ""),
+            nm = String(D.get("name") || "").trim(),
+            er = $("#aerr");
+          function fail(m) {
+            er.textContent = m;
+            er.hidden = false;
+          }
+          er.hidden = true;
+          if (!/^\S+@\S+\.\S+$/.test(em)) {
+            fail("Enter a valid email address, like you@example.com.");
+            return;
+          }
+          if (pw.length < 6) {
+            fail("Use a password with at least 6 characters.");
+            return;
+          }
+          if (AM === "up") {
+            if (!nm) {
+              fail("Enter your name so we can greet you.");
+              return;
+            }
+            if (U[em]) {
+              fail(
+                "An account with this email already exists. Sign in instead.",
+              );
+              return;
+            }
+            var salt = uid() + uid() + uid();
+            hashPw(pw, salt).then(function (h) {
+              var firstUser = !Object.keys(U).length;
+              U[em] = { name: nm, salt: salt, hash: h };
+              lsSet(UK, U);
+              if (firstUser) {
+                try {
+                  var old = localStorage.getItem("lifeos-v1");
+                  if (old && !localStorage.getItem("lifeos-v1:" + em))
+                    localStorage.setItem("lifeos-v1:" + em, old);
+                } catch (e) {}
+              }
+              login(em);
+            });
+          } else {
+            var u = U[em];
+            if (!u) {
+              fail("No account found for this email. Create one instead.");
+              return;
+            }
+            hashPw(pw, u.salt).then(function (h) {
+              if (h !== u.hash) {
+                fail("Wrong password. Try again.");
+                return;
+              }
+              login(em);
+            });
+          }
+        }
+
+        /* ---------- events ---------- */
+        document.addEventListener("submit", function (e) {
+          e.preventDefault();
+          if (e.target.id === "af") {
+            doAuth(e.target);
+            return;
+          }
+          if (e.target.id !== "fm") return;
+          var D = new FormData(e.target),
+            v = {},
+            f = {};
+          F[FT].forEach(function (d) {
+            v[d[0]] = String(D.get(d[0]) || "").trim();
+          });
+          if (!v.title) return;
+          F[FT].forEach(function (d) {
+            var k = d[0];
+            if (k === "price") f.priceM = minor(v.price, v.currency);
+            else if (k === "cost") f.costM = minor(v.cost, v.currency);
+            else if (k === "remind") f.remind = parseInt(v.remind, 10) || 3;
+            else f[k] = v[k];
+          });
+          var r;
+          if (ED) {
+            var old = ED.f,
+              kk = KR[ED.type] || {};
+            if (old.snooze) f.snooze = old.snooze;
+            ED.title = f.title;
+            ED.f = f;
+            syncRem(
+              ED,
+              Object.keys(kk).filter(function (n) {
+                return (
+                  S.m.some(function (m) {
+                    return m.rec === ED.id && m.kind === n;
+                  }) ||
+                  (!old[kk[n]] && f[kk[n]])
+                );
+              }),
+            );
+            toast("Changes saved.");
+          } else {
+            r = mk(FT, f);
+            if (FT === "purchase") {
+              var only = [];
+              if (D.get("_ret")) only.push("return");
+              if (D.get("_war")) only.push("warranty");
+              syncRem(r, only);
+              if (f.receipt) {
+                lk(
+                  mk("document", {
+                    title: f.receipt,
+                    docType: "receipt",
+                    note: "",
+                  }),
+                  r,
+                  "receipt for",
+                );
+              }
+              if (D.get("_stuff")) {
+                lk(
+                  mk("belonging", {
+                    title: f.title,
+                    category: "",
+                    location: "",
+                    serial: "",
+                  }),
+                  r,
+                  "bought in",
+                );
+              }
+              if (D.get("_err") && f.returnBy) {
+                lk(
+                  mk("errand", {
+                    title: "Return " + f.title,
+                    location: "",
+                    due: f.returnBy,
+                  }),
+                  r,
+                  "created for",
+                );
+              }
+              toast("Purchase saved with its linked records.");
+            } else {
+              syncRem(r);
+              var lid = D.get("_link");
+              if (lid && rec(lid)) lk(r, rec(lid), "linked to");
+              toast(TYPES[FT] + " saved.");
+            }
+          }
+          save();
+          close();
+          render();
+        });
+        document.addEventListener("click", function (e) {
+          if (e.target.id === "ov") {
+            close();
+            return;
+          }
+          if (e.target.id === "ta") {
+            if (TA) TA();
+            $("#toast").classList.remove("on");
+            return;
+          }
+          var t = e.target.closest("[data-a]");
+          if (!t) return;
+          var a = t.dataset.a,
+            id = t.dataset.id,
+            k = t.dataset.k,
+            r,
+            m;
+          if (a === "am") {
+            AM = id;
+            renderAuth();
+            return;
+          }
+          if (a === "theme") {
+            theme(
+              document.documentElement.getAttribute("data-theme") === "light"
+                ? "dark"
+                : "light",
+            );
+            return;
+          }
+          if (a === "lo") {
+            logout();
+            return;
+          }
+          if (!S) return;
+          if (a === "nav") {
+            V = id;
+            render();
+            window.scrollTo(0, 0);
+          } else if (a === "add") openForm("purchase");
+          else if (a === "ft") openForm(id);
+          else if (a === "tf") {
+            TF = id;
+            render();
+          } else if (a === "open") openRec(id);
+          else if (a === "x") close();
+          else if (a === "edit") {
+            r = rec(id);
+            openForm(r.type, r);
+          } else if (a === "arch") {
+            r = rec(id);
+            r.arch = r.arch ? 0 : 1;
+            save();
+            close();
+            render();
+            toast(
+              r.arch ? "Archived. Linked records are untouched." : "Restored.",
+            );
+          } else if (a === "snz") {
+            if (k === "m") {
+              S.m.filter(function (x) {
+                return x.id === id;
+              })[0].snooze = add(1);
+            } else rec(id).f.snooze = add(1);
+            save();
+            render();
+            toast("Snoozed until tomorrow.");
+          } else if (a === "err") {
+            m = S.m.filter(function (x) {
+              return x.id === id;
+            })[0];
+            r = rec(m.rec);
+            lk(
+              mk("errand", {
+                title:
+                  (m.kind === "return" ? "Return " : "Warranty service: ") +
+                  r.title,
+                location: "",
+                due: m.date,
+              }),
+              r,
+              "created for",
+            );
+            save();
+            render();
+            toast("Errand created and linked.");
+          } else if (a === "dn") {
+            if (k === "m") {
+              m = S.m.filter(function (x) {
+                return x.id === id;
+              })[0];
+              r = rec(m.rec);
+              m.done = 1;
+              if (m.kind === "renewal") {
+                r.f.renewal = addCycle(m.date, r.f.cycle);
+                syncRem(r);
+                toast(
+                  "Renewal recorded. Next renewal " + fd(r.f.renewal) + ".",
+                );
+              }
+            } else {
+              r = rec(id);
+              r.done = r.done ? 0 : 1;
+              if (r.done) {
+                var p = S.l
+                  .filter(function (l) {
+                    return l.a === r.id;
+                  })
+                  .map(function (l) {
+                    return rec(l.b);
+                  })
+                  .filter(function (o) {
+                    return o && o.type === "purchase";
+                  })[0];
+                var rm =
+                  p &&
+                  S.m.filter(function (x) {
+                    return x.rec === p.id && x.kind === "return" && !x.done;
+                  })[0];
+                if (rm)
+                  toast(
+                    "Errand complete. Mark the return as completed?",
+                    "Mark return done",
+                    function () {
+                      rm.done = 1;
+                      save();
+                      render();
+                    },
+                  );
+              }
+            }
+            save();
+            render();
+          }
+        });
+        document.addEventListener("input", function (e) {
+          if (e.target.id === "q") {
+            Q = e.target.value;
+            $("#list").innerHTML = lst();
+          }
+        });
+        document.addEventListener("keydown", function (e) {
+          if (e.key === "Escape") close();
+        });
+
+        /* ---------- boot ---------- */
+        theme(
+          document.documentElement.getAttribute("data-theme") === "light"
+            ? "light"
+            : "dark",
+        );
+        U = lsGet(UK) || {};
+        var se = lsGet(SK);
+        if (se && U[se]) start(se);
+        else showAuth();
+      })();
+    </script>
+  </body>
 </html>
-
