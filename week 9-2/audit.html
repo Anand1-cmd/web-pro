@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Accessibility Audit Report | Enkhtsog Anand</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #080808;
+      --bg-card: #121212;
+      --gold: #d4af37;
+      --gold-light: #f3e5ab;
+      --champagne: #e6ceb1;
+      --ink: #f7f4ef;
+      --muted: #9e9689;
+      --line: rgba(212, 175, 55, 0.22);
+      --accent-soft: rgba(212, 175, 55, 0.12);
+      --shadow: 0 14px 36px rgba(0, 0, 0, 0.75);
+      --font: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      background:
+        radial-gradient(ellipse at 10% 0%, rgba(212, 175, 55, 0.14) 0%, transparent 45%),
+        radial-gradient(ellipse at 100% 80%, rgba(230, 206, 177, 0.08) 0%, transparent 40%),
+        var(--bg);
+      color: var(--ink);
+      font-family: var(--font);
+      line-height: 1.7;
+      padding: 40px 20px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .report-container {
+      width: 100%;
+      max-width: 820px;
+      background-color: var(--bg-card);
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      padding: 48px;
+      box-shadow: var(--shadow);
+    }
+
+    .report-header {
+      margin-bottom: 36px;
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 24px;
+    }
+
+    .report-header h1 {
+      font-size: clamp(2rem, 3.5vw, 2.6rem);
+      font-weight: 800;
+      letter-spacing: -1px;
+      margin-bottom: 10px;
+      background: linear-gradient(135deg, #ffffff 20%, var(--champagne) 70%, var(--gold) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .report-header p {
+      color: var(--muted);
+      font-size: 0.9rem;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+
+    .score-banner {
+      background: linear-gradient(145deg, rgba(18, 17, 15, 0.98), rgba(26, 24, 20, 0.98));
+      border: 1px solid rgba(212, 175, 55, 0.4);
+      border-radius: 20px;
+      padding: 36px;
+      text-align: center;
+      margin-bottom: 40px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    }
+
+    .score-label {
+      font-size: 0.75rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: var(--gold);
+      margin-bottom: 12px;
+    }
+
+    .score-number {
+      font-size: clamp(3.5rem, 8vw, 5.5rem);
+      font-weight: 800;
+      line-height: 1;
+      background: linear-gradient(135deg, var(--gold-light), var(--gold));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 16px;
+    }
+
+    .score-status {
+      display: inline-block;
+      background-color: var(--accent-soft);
+      border: 1px solid rgba(212, 175, 55, 0.3);
+      color: var(--gold-light);
+      padding: 8px 18px;
+      border-radius: 30px;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+
+    .audit-section {
+      margin-bottom: 36px;
+    }
+
+    .audit-section h2 {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--ink);
+      margin-bottom: 16px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .audit-section p {
+      color: var(--muted);
+      font-size: 0.95rem;
+      margin-bottom: 16px;
+    }
+
+    .audit-section p strong {
+      color: var(--champagne);
+    }
+
+    .audit-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .audit-list li {
+      background: rgba(22, 21, 18, 0.6);
+      border: 1px solid var(--line);
+      padding: 18px 20px;
+      border-radius: 14px;
+      font-size: 0.92rem;
+      color: var(--muted);
+      transition: border-color 0.2s ease;
+    }
+
+    .audit-list li:hover {
+      border-color: rgba(212, 175, 55, 0.4);
+    }
+
+    .audit-list strong {
+      color: var(--gold-light);
+    }
+
+    code {
+      background-color: var(--accent-soft);
+      border: 1px solid rgba(212, 175, 55, 0.25);
+      color: var(--gold-light);
+      padding: 2px 6px;
+      border-radius: 6px;
+      font-family: monospace;
+      font-size: 0.88rem;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="report-container">
+    
+    <header class="report-header">
+      <h1>Accessibility Audit Report</h1>
+      <p>Team 9 — Web Programming | Gachon University</p>
+    </header>
+
+    <div class="score-banner">
+      <div class="score-label">Lighthouse Accessibility Score</div>
+      <div class="score-number">100 / 100</div>
+      <div class="score-status">Status: Maintained clean score (No issues found before or after)</div>
+    </div>
+
+    <section class="audit-section">
+      <h2>1. Audit Overview</h2>
+      <p>When the initial Lighthouse accessibility audit was run on the project codebase, <strong>zero accessibility violations, errors, or warnings</strong> were identified. Because accessibility standards were built into the project from day one, no retroactive fixes were required.</p>
+    </section>
+
+    <section class="audit-section">
+      <h2>2. Proactive Accessibility Measures Implemented from Scratch</h2>
+      <ul class="audit-list">
+        <li>
+          <strong>Semantic Interactive Elements:</strong> All interactive controls and buttons were developed using native HTML <code>&lt;button&gt;</code> elements rather than generic <code>&lt;div&gt;</code> tags, guaranteeing built-in keyboard navigation and screen-reader focus support.
+        </li>
+        <li>
+          <strong>WCAG-Compliant Color Contrast:</strong> All text and background color combinations were carefully selected to meet or exceed the WCAG AA minimum contrast ratio (4.5:1), ensuring full legibility for users with visual impairments.
+        </li>
+        <li>
+          <strong>Logical Heading Hierarchy:</strong> Document structure follows a strict, sequential heading order (from <code>&lt;h1&gt;</code> down to <code>&lt;h3&gt;</code>), allowing assistive technologies to navigate the layout seamlessly without skipping levels.
+        </li>
+      </ul>
+    </section>
+
+  </div>
+
+</body>
+</html>
