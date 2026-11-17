@@ -8,7 +8,7 @@
   <style>
     body {
       font-family: Arial, sans-serif;
-      background-color: #f0fdfa;
+      background-color: #eef2ff;
       color: #1e293b;
       max-width: 700px;
       margin: auto;
@@ -16,7 +16,7 @@
     }
 
     h1 {
-      color: #0f766e;
+      color: #4338ca;
     }
 
     fieldset {
@@ -28,7 +28,7 @@
     }
 
     legend {
-      color: #0f766e;
+      color: #4338ca;
       font-weight: bold;
       padding: 0 8px;
     }
@@ -38,7 +38,7 @@
       margin: 14px 0 6px;
     }
 
-    input:not([type="checkbox"]):not([type="range"]),
+    input:not([type="checkbox"]),
     select {
       width: 100%;
       box-sizing: border-box;
@@ -51,8 +51,8 @@
 
     input:focus,
     select:focus {
-      outline: 2px solid #99f6e4;
-      border-color: #0f766e;
+      outline: 2px solid #c7d2fe;
+      border-color: #4338ca;
     }
 
     input:valid:not(:placeholder-shown),
@@ -67,9 +67,8 @@
       background-color: #fef2f2;
     }
 
-    input[type="checkbox"],
-    input[type="range"] {
-      accent-color: #0f766e;
+    input[type="checkbox"] {
+      accent-color: #4338ca;
     }
 
     .help {
@@ -99,7 +98,7 @@
 
     button {
       padding: 10px 20px;
-      background-color: #0f766e;
+      background-color: #4338ca;
       color: white;
       border: none;
       border-radius: 5px;
@@ -112,11 +111,6 @@
       cursor: not-allowed;
     }
 
-    #experience-value {
-      color: #0f766e;
-      font-weight: bold;
-    }
-
     #success-message {
       margin-top: 15px;
       padding: 12px;
@@ -127,7 +121,7 @@
     }
 
     a {
-      color: #0f766e;
+      color: #4338ca;
     }
   </style>
 </head>
@@ -197,19 +191,6 @@
       </select>
       <small id="major-help" class="help">Choose your major.</small>
       <small id="major-error" class="error"></small>
-
-      <label for="experience">Years of Coding Experience</label>
-      <input
-        type="range"
-        id="experience"
-        name="experience"
-        min="0"
-        max="10"
-        value="0"
-        aria-describedby="experience-value"
-        aria-invalid="false"
-      >
-      <span id="experience-value">0 years</span>
     </fieldset>
 
     <fieldset>
@@ -297,8 +278,6 @@
     const registerButton = document.getElementById('register-button');
     const password = document.getElementById('password');
     const confirmPassword = document.getElementById('confirm-password');
-    const experience = document.getElementById('experience');
-    const experienceValue = document.getElementById('experience-value');
     const successMessage = document.getElementById('success-message');
 
     const fields = form.querySelectorAll('input, select');
@@ -373,10 +352,6 @@
     for (let field of fields) {
       field.addEventListener('input', function() {
         validateForm(field);
-
-        if (field === experience) {
-          experienceValue.textContent = experience.value + ' years';
-        }
       });
 
       field.addEventListener('change', function() {
