@@ -311,7 +311,101 @@
     footer p {
       line-height: 1.8;
     }
+    .showcase-container {
+      background-color: var(--bg-card);
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      padding: 1.75rem;
+      box-shadow: var(--shadow);
+    }
 
+    .showcase-header {
+      display: flex;
+      align-items: center;
+      gap: 1.25rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .showcase-header h2 {
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: var(--gold);
+      white-space: nowrap;
+      letter-spacing: -0.3px;
+    }
+
+    .showcase-header::after {
+      content: "";
+      height: 1px;
+      flex-grow: 1;
+      background: linear-gradient(90deg, var(--line), transparent);
+    }
+
+    .showcase-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1.25rem;
+    }
+
+    .showcase-card {
+      background-color: var(--chip);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: flex-start;
+      transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+    }
+
+    .showcase-card:hover {
+      transform: translateY(-3px);
+      border-color: rgba(212, 175, 55, 0.55);
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.7), 0 0 16px rgba(212, 175, 55, 0.12);
+    }
+
+    .showcase-card h3 {
+      font-size: 1.05rem;
+      font-weight: 800;
+      color: var(--gold-light);
+      margin-bottom: 0.65rem;
+    }
+
+    .showcase-card p {
+      font-size: 0.85rem;
+      color: var(--champagne);
+      line-height: 1.6;
+      margin-bottom: 1.35rem;
+      opacity: 0.85;
+    }
+
+    .showcase-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.55rem 1rem;
+      border-radius: 8px;
+      background: linear-gradient(135deg, var(--gold), var(--champagne));
+      color: #080808;
+      font-size: 0.82rem;
+      font-weight: 700;
+      text-decoration: none;
+      transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
+    }
+
+    .showcase-btn:hover {
+      filter: brightness(1.08);
+      box-shadow: 0 6px 18px rgba(212, 175, 55, 0.35);
+      transform: translateY(-1px);
+    }
+
+    @media (max-width: 900px) {
+      .showcase-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+   
     @media (max-width: 900px) {
       .layout {
         grid-template-columns: 240px minmax(0, 1fr);
@@ -599,6 +693,31 @@
           <li><a href="week 9-2/task3.html">Task3</a></li>
           <li><a href="week 9-2/audit.html">Audit report</a></li>
         </ul>
+      </section>
+
+    <section class="showcase-container">
+        <div class="showcase-header">
+          <h2>My Projects &amp; Coursework Week 10-1</h2>
+        </div>
+
+        <div class="showcase-grid">
+          <article class="showcase-card">
+            <div>
+              <h3>Personal Portfolio</h3>
+              <p>Personal portfolio website showcasing skills and course projects.</p>
+            </div>
+            <a href="https://anand1-cmd.github.io/Portfolio/" class="showcase-btn">View Live Site</a>
+          </article>
+
+          <article class="showcase-card">
+            <div>
+              <h3>Book Search App</h3>
+              <p>Interactive book search application deployed via GitHub Pages (Weeks 6–7).</p>
+            </div>
+            <a href="week7/book search.html" class="showcase-btn">View Live App</a>
+          </article>
+
+        </div>
       </section>
 
     </main>
