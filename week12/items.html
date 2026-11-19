@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Exercise 2 — Add & Remove Items</title>
+
+  <style>
+    :root {
+      --bg-obsidian: #0b0a09;
+      --bg-card: #14120f;
+      --bg-elevated: #1d1914;
+      --border-gold: rgba(212, 175, 55, 0.34);
+      --border-champagne: rgba(243, 229, 171, 0.22);
+      --gold: #d4af37;
+      --gold-bright: #e5c158;
+      --champagne: #f3e5ab;
+      --text-primary: #faf4e4;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      background: radial-gradient(circle at top, #1b1610 0%, var(--bg-obsidian) 70%);
+      color: var(--text-primary);
+      margin: 0;
+      padding: 2rem;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
+    }
+
+    .card {
+      background: linear-gradient(180deg, #171410 0%, var(--bg-card) 100%);
+      border: 1px solid var(--border-gold);
+      border-radius: 14px;
+      padding: 2rem;
+      box-shadow: 0 14px 36px rgba(0, 0, 0, 0.65), 0 0 0 1px rgba(243, 229, 171, 0.06);
+      width: 100%;
+      max-width: 480px;
+    }
+
+    h2 {
+      margin: 0 0 1.25rem;
+      font-size: 1.25rem;
+      color: var(--champagne);
+      border-bottom: 1px solid var(--border-champagne);
+      padding-bottom: 0.65rem;
+    }
+
+    .row {
+      display: flex;
+      gap: 0.6rem;
+    }
+
+    input {
+      flex: 1;
+      background: var(--bg-elevated);
+      color: var(--text-primary);
+      border: 1px solid var(--border-champagne);
+      border-radius: 8px;
+      padding: 0.55rem 0.8rem;
+      font-size: 0.95rem;
+      outline: none;
+    }
+
+    input:focus {
+      border-color: var(--gold);
+    }
+
+    button {
+      cursor: pointer;
+      border: 1px solid var(--border-gold);
+      border-radius: 8px;
+      padding: 0.55rem 1rem;
+      font-size: 0.92rem;
+      font-weight: 600;
+      background: linear-gradient(135deg, var(--gold-bright) 0%, var(--gold) 100%);
+      color: #120f0a;
+      transition: transform 0.12s ease, filter 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    button:hover {
+      filter: brightness(1.08);
+      box-shadow: 0 0 12px rgba(212, 175, 55, 0.28);
+      transform: translateY(-1px);
+    }
+
+    button.remove-btn {
+      background: var(--bg-elevated);
+      color: var(--champagne);
+      border-color: var(--border-champagne);
+      padding: 0.3rem 0.65rem;
+    }
+
+    button.remove-btn:hover {
+      background: #28221b;
+      border-color: var(--gold);
+    }
+
+    .task-list {
+      list-style: none;
+      padding: 0;
+      margin: 1.15rem 0 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0.55rem;
+    }
+
+    .task-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: var(--bg-elevated);
+      border: 1px solid var(--border-champagne);
+      border-radius: 8px;
+      padding: 0.6rem 0.9rem;
+    }
+  </style>
+</head>
+<body>
+  <main class="card">
+    <h2> Add &amp; Remove Items</h2>
+    <div class="row">
+      <input id="task-input" type="text" placeholder="New task" />
+      <button id="add-btn" type="button">Add</button>
+    </div>
+    <ul id="task-list" class="task-list"></ul>
+  </main>
+
+  <script>
+    let tasks = [];
+    const inputEl = document.getElementById("task-input");
+    const addBtn = document.getElementById("add-btn");
+    const listEl = document.getElementById("task-list");
+
+    function renderTasks() {
+      listEl.innerHTML = "";
+      tasks.forEach((task) => {
+        const li = document.createElement("li");
+        li.className = "task-item";
+
+        const textSpan = document.createElement("span");
+        textSpan.textContent = task.text;
+
+        const removeBtn = document.createElement("button");
+        removeBtn.type = "button";
+        removeBtn.className = "remove-btn";
+        removeBtn.textContent = "✕";
+        removeBtn.addEventListener("click", () => {
+          tasks = tasks.filter((t) => t.id !== task.id);
+          renderTasks();
+        });
+
+        li.appendChild(textSpan);
+        li.appendChild(removeBtn);
+        listEl.appendChild(li);
+      });
+    }
+
+    function addTask() {
+      const trimmed = inputEl.value.trim();
+      if (!trimmed) return;
+      tasks = [...tasks, { id: Date.now() + Math.random(), text: trimmed }];
+      inputEl.value = "";
+      inputEl.focus();
+      renderTasks();
+    }
+
+    addBtn.addEventListener("click", addTask);
+    inputEl.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") addTask();
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Toggle Visibility</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/react@18.3.1/umd/react.development.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/react-dom@18.3.1/umd/react-dom.development.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@babel/standalone@7.25.6/babel.min.js"></script>
+
+  <style>
+    :root {
+      --bg-obsidian: #0b0a09;
+      --bg-card: #14120f;
+      --bg-elevated: #1d1914;
+      --border-gold: rgba(212, 175, 55, 0.34);
+      --border-champagne: rgba(243, 229, 171, 0.22);
+      --gold: #d4af37;
+      --gold-bright: #e5c158;
+      --champagne: #f3e5ab;
+      --champagne-muted: #cbb98c;
+      --text-primary: #faf4e4;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      background: radial-gradient(circle at top, #1b1610 0%, var(--bg-obsidian) 70%);
+      color: var(--text-primary);
+      margin: 0;
+      padding: 2rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    .card {
+      background: linear-gradient(180deg, #171410 0%, var(--bg-card) 100%);
+      border: 1px solid var(--border-gold);
+      border-radius: 14px;
+      padding: 2rem;
+      box-shadow: 0 14px 36px rgba(0, 0, 0, 0.65), 0 0 0 1px rgba(243, 229, 171, 0.06);
+      width: 100%;
+      max-width: 460px;
+    }
+
+    h2 {
+      margin: 0 0 1.25rem;
+      font-size: 1.25rem;
+      color: var(--champagne);
+      border-bottom: 1px solid var(--border-champagne);
+      padding-bottom: 0.65rem;
+    }
+
+    button {
+      cursor: pointer;
+      border: 1px solid var(--border-gold);
+      border-radius: 8px;
+      padding: 0.55rem 1rem;
+      font-size: 0.95rem;
+      font-weight: 600;
+      background: linear-gradient(135deg, var(--gold-bright) 0%, var(--gold) 100%);
+      color: #120f0a;
+      transition: transform 0.12s ease, filter 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    button:hover {
+      filter: brightness(1.08);
+      box-shadow: 0 0 12px rgba(212, 175, 55, 0.28);
+      transform: translateY(-1px);
+    }
+
+    .detail-text {
+      margin: 1rem 0 0;
+      padding: 0.9rem 1rem;
+      background: var(--bg-elevated);
+      border-left: 3px solid var(--gold);
+      border-radius: 6px;
+      color: var(--champagne-muted);
+      line-height: 1.6;
+    }
+  </style>
+</head>
+<body>
+  <div id="root">
+    <p style="color:#cbb98c;text-align:center;">Loading React...</p>
+  </div>
+
+  <script type="text/babel">
+    const { useState } = React;
+
+    function ToggleDetail() {
+      const [isVisible, setIsVisible] = useState(false);
+
+      return (
+        <main className="card">
+          <h2>Toggle Visibility</h2>
+          <button onClick={() => setIsVisible((prev) => !prev)}>
+            {isVisible ? "Hide details" : "Show details"}
+          </button>
+          {isVisible && (
+            <p className="detail-text">
+              React state enables dynamic UIs without page reloads.
+            </p>
+          )}
+        </main>
+      );
+    }
+
+    const root = ReactDOM.createRoot(document.getElementById("root"));
+    root.render(<ToggleDetail />);
+  </script>
+</body>
+</html>
