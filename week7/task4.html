@@ -55,14 +55,14 @@
       border-color: #4338ca;
     }
 
-    input:valid:not(:placeholder-shown),
-    select:valid {
+    input.touched:valid:not(:placeholder-shown),
+    select.touched:valid {
       border-color: #16a34a;
       background-color: #f0fdf4;
     }
 
-    input:invalid:not(:placeholder-shown),
-    select:invalid {
+    input.touched:invalid,
+    select.touched:invalid {
       border-color: #dc2626;
       background-color: #fef2f2;
     }
@@ -83,13 +83,14 @@
       color: #dc2626;
       font-size: 13px;
       margin-top: 5px;
+      min-height: 16px;
     }
 
     .terms {
       display: flex;
       align-items: center;
       gap: 8px;
-      margin: 15px 0;
+      margin: 15px 0 5px;
     }
 
     .terms label {
@@ -97,6 +98,7 @@
     }
 
     button {
+      margin-top: 10px;
       padding: 10px 20px;
       background-color: #4338ca;
       color: white;
@@ -118,10 +120,6 @@
       color: #166534;
       border: 1px solid #86efac;
       border-radius: 5px;
-    }
-
-    a {
-      color: #4338ca;
     }
   </style>
 </head>
@@ -154,6 +152,8 @@
         id="student-id"
         name="studentId"
         pattern="[0-9]{9}"
+        inputmode="numeric"
+        maxlength="9"
         placeholder="9-digit student ID"
         title="Enter exactly 9 digits"
         aria-describedby="student-id-help student-id-error"
@@ -171,7 +171,7 @@
         aria-describedby="birth-date-help birth-date-error"
         aria-invalid="false"
       >
-      <small id="birth-date-help" class="help">Select your date of birth.</small>
+      <small id="birth-date-help" class="help">Optional. Select your date of birth.</small>
       <small id="birth-date-error" class="error"></small>
 
       <label for="major">Major</label>
@@ -238,7 +238,7 @@
 
       <label for="phone">Phone</label>
       <input
-        type="text"
+        type="tel"
         id="phone"
         name="phone"
         pattern="[0-9]{3}-[0-9]{4}-[0-9]{4}"
@@ -267,15 +267,15 @@
 
     <button type="submit" id="register-button" disabled>Register</button>
 
-    <div id="success-message" role="status" aria-live="polite" hidden>
-    </div>
+    <div id="success-message" role="status" aria-live="polite" hidden></div>
 
   </form>
-
 
   <script>
     const form = document.getElementById('registration-form');
     const registerButton = document.getElementById('register-button');
+    const fullName = document.getElementById('full-name');
+    const birthDate = document.getElementById('birth-date');
     const password = document.getElementById('password');
     const confirmPassword = document.getElementById('confirm-password');
     const successMessage = document.getElementById('success-message');
@@ -283,9 +283,16 @@
     const fields = form.querySelectorAll('input, select');
     const touched = new Set();
 
-    function updatePassword() {
-      if (confirmPassword.value !== '' &&
-          confirmPassword.value !== password.value) {
+    birthDate.max = new Date().toISOString().split('T')[0];
+
+    function runCustomChecks() {
+      if (fullName.value.length > 0 && fullName.value.trim() === '') {
+        fullName.setCustomValidity('Full name cannot be blank spaces.');
+      } else {
+        fullName.setCustomValidity('');
+      }
+
+      if (confirmPassword.value !== '' && confirmPassword.value !== password.value) {
         confirmPassword.setCustomValidity('Passwords do not match.');
       } else {
         confirmPassword.setCustomValidity('');
@@ -293,51 +300,52 @@
     }
 
     function getError(field) {
-      if (field.validity.valueMissing) {
-        return 'This field is required.';
-      }
-
-      if (field.validity.typeMismatch) {
-        return 'Enter a valid email address.';
-      }
-
-      if (field.validity.patternMismatch && field.id === 'student-id') {
-        return 'Student ID must contain exactly 9 digits.';
-      }
-
-      if (field.validity.patternMismatch && field.id === 'phone') {
-        return 'Use the format 010-1234-5678.';
-      }
-
-      if (field.validity.tooShort) {
-        return 'Password must contain at least 8 characters.';
-      }
-
       if (field.validity.customError) {
         return field.validationMessage;
       }
-
+      if (field.validity.valueMissing) {
+        return field.id === 'terms'
+          ? 'You must agree to the terms.'
+          : 'This field is required.';
+      }
+      if (field.validity.typeMismatch) {
+        return 'Enter a valid email address.';
+      }
+      if (field.validity.patternMismatch) {
+        if (field.id === 'student-id') return 'Student ID must contain exactly 9 digits.';
+        if (field.id === 'phone') return 'Use the format 010-1234-5678.';
+      }
+      if (field.validity.tooShort) {
+        return `Must contain at least ${field.minLength} characters.`;
+      }
+      if (field.validity.rangeOverflow && field.id === 'birth-date') {
+        return 'Date of birth cannot be in the future.';
+      }
       return '';
     }
 
-    function validateForm(changedField) {
-      updatePassword();
+    function markTouched(field) {
+      touched.add(field.id);
+      field.classList.add('touched');
+    }
+
+    function validateForm(changedField, hideSuccess = true) {
+      runCustomChecks();
 
       if (changedField) {
-        touched.add(changedField.id);
+        markTouched(changedField);
       }
 
       if (changedField === password && confirmPassword.value !== '') {
-        touched.add(confirmPassword.id);
+        markTouched(confirmPassword);
       }
 
-      for (let field of fields) {
+      for (const field of fields) {
         if (touched.has(field.id)) {
           const valid = field.validity.valid;
           field.setAttribute('aria-invalid', String(!valid));
 
           const error = document.getElementById(field.id + '-error');
-
           if (error) {
             error.textContent = valid ? '' : getError(field);
           }
@@ -345,30 +353,32 @@
       }
 
       registerButton.disabled = !form.checkValidity();
-      successMessage.hidden = true;
-      successMessage.textContent = '';
+
+      if (hideSuccess) {
+        successMessage.hidden = true;
+        successMessage.textContent = '';
+      }
     }
 
-    for (let field of fields) {
-      field.addEventListener('input', function() {
-        validateForm(field);
-      });
-
-      field.addEventListener('change', function() {
-        validateForm(field);
-      });
+    for (const field of fields) {
+      field.addEventListener('input', () => validateForm(field));
+      field.addEventListener('change', () => validateForm(field));
+      field.addEventListener('blur', () => validateForm(field, false));
     }
 
-    form.addEventListener('submit', function(event) {
+    form.addEventListener('submit', (event) => {
       event.preventDefault();
-      updatePassword();
+      runCustomChecks();
 
       if (!form.checkValidity()) {
-        for (let field of fields) {
-          touched.add(field.id);
+        for (const field of fields) {
+          markTouched(field);
         }
-
         validateForm();
+
+
+        const firstInvalid = form.querySelector(':invalid');
+        if (firstInvalid) firstInvalid.focus();
         return;
       }
 
