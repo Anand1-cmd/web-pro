@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Counter with History</title>
+
+  <script
+    crossorigin
+    src="https://unpkg.com/react@18/umd/react.development.js"
+    onerror="this.onerror=null;this.src='https://cdn.jsdelivr.net/npm/react@18/umd/react.development.js';"
+  ></script>
+  <script
+    crossorigin
+    src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"
+    onerror="this.onerror=null;this.src='https://cdn.jsdelivr.net/npm/react-dom@18/umd/react-dom.development.js';"
+  ></script>
+  <script
+    src="https://unpkg.com/@babel/standalone/babel.min.js"
+    onerror="this.onerror=null;this.src='https://cdn.jsdelivr.net/npm/@babel/standalone/babel.min.js';"
+  ></script>
+
+  <style>
+    :root {
+      --bg-obsidian: #0b0a09;
+      --bg-card: #14120f;
+      --bg-elevated: #1d1914;
+      --border-gold: rgba(212, 175, 55, 0.32);
+      --border-champagne: rgba(243, 229, 171, 0.22);
+      --gold: #d4af37;
+      --gold-bright: #e5c158;
+      --champagne: #f3e5ab;
+      --champagne-muted: #cbb98c;
+      --text-primary: #faf4e4;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      background: radial-gradient(circle at top, #1b1610 0%, var(--bg-obsidian) 70%);
+      color: var(--text-primary);
+      margin: 0;
+      padding: 2rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    .card {
+      background: linear-gradient(180deg, #171410 0%, var(--bg-card) 100%);
+      border: 1px solid var(--border-gold);
+      border-radius: 14px;
+      padding: 2.25rem 2rem;
+      box-shadow: 0 14px 36px rgba(0, 0, 0, 0.65), 0 0 0 1px rgba(243, 229, 171, 0.06);
+      text-align: center;
+      width: 100%;
+      max-width: 440px;
+    }
+
+    h2 {
+      margin: 0;
+      font-size: 1.35rem;
+      letter-spacing: 0.04em;
+      color: var(--champagne);
+    }
+
+    .counter-display {
+      font-size: 3.75rem;
+      font-weight: 700;
+      margin: 1rem 0 1.5rem;
+      color: var(--gold-bright);
+      text-shadow: 0 2px 18px rgba(212, 175, 55, 0.25);
+    }
+
+    .btn-group {
+      display: flex;
+      justify-content: center;
+      gap: 0.65rem;
+      flex-wrap: wrap;
+      margin-bottom: 1.5rem;
+    }
+
+    button {
+      cursor: pointer;
+      border: 1px solid var(--border-gold);
+      border-radius: 8px;
+      padding: 0.6rem 1.05rem;
+      font-size: 0.95rem;
+      font-weight: 600;
+      background: linear-gradient(135deg, var(--gold-bright) 0%, var(--gold) 100%);
+      color: #120f0a;
+      transition: transform 0.12s ease, filter 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    button:hover:not(:disabled) {
+      filter: brightness(1.08);
+      box-shadow: 0 0 14px rgba(212, 175, 55, 0.3);
+      transform: translateY(-1px);
+    }
+
+    button:disabled {
+      background: #231f19;
+      color: #6f6552;
+      border-color: rgba(212, 175, 55, 0.12);
+      cursor: not-allowed;
+      box-shadow: none;
+    }
+
+    button.secondary {
+      background: var(--bg-elevated);
+      color: var(--champagne);
+      border-color: var(--border-champagne);
+    }
+
+    button.secondary:hover:not(:disabled) {
+      background: #28221b;
+      border-color: var(--gold);
+    }
+
+    button.undo {
+      background: transparent;
+      color: var(--gold-bright);
+      border: 1px solid var(--gold);
+    }
+
+    button.undo:hover:not(:disabled) {
+      background: rgba(212, 175, 55, 0.14);
+    }
+
+    .history-box {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 0.95rem;
+      color: var(--champagne-muted);
+      background: var(--bg-elevated);
+      border: 1px solid var(--border-champagne);
+      padding: 0.75rem 1rem;
+      border-radius: 8px;
+    }
+  </style>
+</head>
+<body>
+  <div id="root">
+    <p style="color:#cbb98c;text-align:center;">Loading React &amp; Counter...</p>
+  </div>
+
+  <script type="text/babel">
+    const { useState } = React;
+
+    function CounterWithHistory() {
+      const [count, setCount] = useState(0);
+      const [history, setHistory] = useState([0]);
+
+      const recordCount = (nextCount) => {
+        setCount(nextCount);
+        setHistory((prev) => [...prev, nextCount].slice(-5));
+      };
+
+      const handleIncrement = () => recordCount(count + 1);
+      const handleDecrement = () => recordCount(count - 1);
+      const handleReset = () => recordCount(0);
+
+      const handleUndo = () => {
+        if (history.length <= 1) return;
+        const previousCount = history[history.length - 2];
+        setCount(previousCount);
+        setHistory((prev) => prev.slice(0, -1));
+      };
+
+      return (
+        <main className="card">
+          <h2>Counter with History</h2>
+          <div className="counter-display">{count}</div>
+
+          <div className="btn-group">
+            <button onClick={handleIncrement}>+1</button>
+            <button onClick={handleDecrement}>-1</button>
+            <button className="secondary" onClick={handleReset}>Reset</button>
+            <button
+              className="undo"
+              onClick={handleUndo}
+              disabled={history.length <= 1}
+            >
+              Undo
+            </button>
+          </div>
+
+          <div className="history-box">
+            History: [{history.join(", ")}]
+          </div>
+        </main>
+      );
+    }
+
+    const root = ReactDOM.createRoot(document.getElementById("root"));
+    root.render(<CounterWithHistory />);
+  </script>
+</body>
+</html>
